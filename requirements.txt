@@ -1,0 +1,9 @@
+Django>=4.0
+djangorestframework
+Pillow
+pandas
+django-cors-headers
+django-filter
+djangorestframework-simplejwt>=5.2.2
+drf-yasg>=1.21.7
+drf-spectacular
