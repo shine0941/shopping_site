@@ -5,12 +5,14 @@ from .models import AdminUser
 User = get_user_model()
 
 class AdminRegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
-    role = serializers.ChoiceField(choices=AdminUser.ROLE_CHOICES)
+    email = serializers.EmailField(help_text="使用者登入用 email")
+    password = serializers.CharField(write_only=True, help_text="密碼")
+    role = serializers.ChoiceField(choices=AdminUser.ROLE_CHOICES, help_text="角色類型（merchant 或 manager）")
     display_name = serializers.CharField()
     brand_name = serializers.CharField(required=False, allow_blank=True)
     brand_logo = serializers.ImageField(required=False, allow_null=True)
     description = serializers.CharField(required=False, allow_blank=True)
+    
 
     class Meta:
         model = User
