@@ -1,9 +1,27 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import AdminUser
+from .models import AdminUser,User, Customer
 
-User = get_user_model()
+# User = get_user_model()
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'is_active']
+
+class CustomerSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Customer
+        fields = ['id', 'user', 'total_spent', 'birthday', 'member_level']
+
+class AdminUserSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = AdminUser
+        fields = ['id', 'user', 'role', 'display_name', 'brand_name', 'brand_logo', 'description']
 class AdminRegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(help_text="使用者登入用 email")
     password = serializers.CharField(write_only=True, help_text="密碼")
