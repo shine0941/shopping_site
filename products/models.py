@@ -3,6 +3,7 @@ from users.models import AdminUser
 
 class ProductCategory(models.Model):
     name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
     order = models.PositiveIntegerField(default=0)
 
     def __str__(self):
@@ -18,6 +19,8 @@ class Product(models.Model):
     inventory = models.PositiveIntegerField(default=0)
     is_available = models.BooleanField(default=True)
     sold_count = models.PositiveIntegerField(default=0)  # 用於銷售排行
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
@@ -25,6 +28,7 @@ class Product(models.Model):
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images")
     image = models.ImageField(upload_to='product_images/')
+    order = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return f"{self.product.name} Image"
