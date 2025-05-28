@@ -8,3 +8,4 @@ djangorestframework-simplejwt>=5.2.2
 drf-yasg>=1.21.7
 drf-spectacular
 channels
+uvicorn
