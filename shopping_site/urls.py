@@ -45,7 +45,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("api/users/", include("users.urls")),
     path("", include("products.urls")),
-    path("", include("coupons.urls")),
+    path('coupons/', include('coupons.urls')),
     path("", include("cart.urls")),
     path("", include("orders.urls")),
 
