@@ -8,5 +8,5 @@ router.register(r'carts', CartViewSet, basename='cart')
 router.register(r'cart-items', CartItemViewSet, basename='cart-item')
 
 urlpatterns = [
-    path('api/', include(router.urls)),
+    path('', include(router.urls)),
 ]
