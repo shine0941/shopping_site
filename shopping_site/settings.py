@@ -230,3 +230,5 @@ LOGGING = {
         },
     }
 }
+
+# DJANGO_SETTINGS_MODULE=shopping_site.settings uvicorn shopping_site.asgi:application --host 0.0.0.0 --port 8001

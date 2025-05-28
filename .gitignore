@@ -20,3 +20,4 @@ db.sqlite3
 /frontend/.env.local
 /frontend/.DS_Store
 *.csv
+/product_images/
