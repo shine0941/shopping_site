@@ -12,6 +12,7 @@
         class="border p-2 w-full mb-2"
       />
       <button @click="login" class="bg-blue-500 text-white px-4 py-2">登入</button>
+      <button @click="logincustomer" class="bg-blue-500 text-white px-4 py-2">customer登入</button>
     </div>
     <template v-else>
       <div>
@@ -51,6 +52,20 @@ const login = async () => {
   try {
     // http://192.168.1.100:8001/api/docs/#/chat/chat_chatrooms_create
     const res = await axios.post('http://192.168.1.100:8001/users/admin/login/', {
+      email: email.value,
+      password: password.value,
+    })
+    token.value = res.data.access
+    localStorage.setItem('access', token.value)
+    initSocket()
+  } catch (error) {
+    alert('登入失敗')
+  }
+}
+const logincustomer = async () => {
+  try {
+    // http://192.168.1.100:8001/api/docs/#/chat/chat_chatrooms_create
+    const res = await axios.post('http://192.168.1.100:8001/users/customer/login/', {
       email: email.value,
       password: password.value,
     })
