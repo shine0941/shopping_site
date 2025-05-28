@@ -28,7 +28,7 @@ class CustomerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Customer
-        fields = ['id', 'user', 'total_spent', 'birthday', 'member_level']
+        fields = ['id', 'user', 'total_spent', 'birthday', 'membership_level']
 
 class AdminUserSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
