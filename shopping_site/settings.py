@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'cart',
 
     'drf_spectacular',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -153,4 +154,12 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': '後端 RESTful API 規格說明文件',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
+}
+
+ASGI_APPLICATION = 'your_project_name.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+    }
 }
