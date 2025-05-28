@@ -13,22 +13,26 @@
       />
       <button @click="login" class="bg-blue-500 text-white px-4 py-2">登入</button>
     </div>
-
-    <div v-else>
-      <div class="border rounded p-4 h-64 overflow-y-scroll mb-4 bg-gray-100">
-        <div v-for="(msg, index) in messages" :key="index" class="mb-2">
-          <strong>{{ msg.sender }}:</strong> {{ msg.content }}
+    <template v-else>
+      <div>
+        <div class="border rounded p-4 h-64 overflow-y-scroll mb-4 bg-gray-100">
+          <div v-for="(msg, index) in messages" :key="index" class="mb-2">
+            <strong>{{ msg.sender }}:</strong> {{ msg.content }}
+          </div>
         </div>
+        <input
+          v-model="message"
+          type="text"
+          placeholder="輸入訊息..."
+          class="border p-2 w-full mb-2"
+          @keyup.enter="sendMessage"
+        />
+        <button @click="sendMessage" class="bg-green-500 text-white px-4 py-2">送出</button>
       </div>
-      <input
-        v-model="message"
-        type="text"
-        placeholder="輸入訊息..."
-        class="border p-2 w-full mb-2"
-        @keyup.enter="sendMessage"
-      />
-      <button @click="sendMessage" class="bg-green-500 text-white px-4 py-2">送出</button>
-    </div>
+      <div>
+        <button @click="logout">logout</button>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -57,10 +61,13 @@ const login = async () => {
     alert('登入失敗')
   }
 }
-
+const logout = () => {
+  token.value = ''
+  localStorage.removeItem('access')
+}
 const initSocket = () => {
-  //   socket = new WebSocket(`ws://192.168.1.100:8001/ws/chat/1/?token=${token.value}`)
-  socket = new WebSocket(`ws://192.168.1.100:8001/ws/chat/1/`)
+  socket = new WebSocket(`ws://192.168.1.100:8001/ws/chat/1/?token=${token.value}`)
+  //   socket = new WebSocket(`ws://192.168.1.100:8001/ws/chat/1/`)
 
   socket.onmessage = (event) => {
     const data = JSON.parse(event.data)

@@ -15,18 +15,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.room_id = self.scope['url_route']['kwargs']['room_id']
         self.room_group_name = f"chat_{self.room_id}"
 
-        # 解析 token
-        # token = self.scope['query_string'].decode().split('=')[1]
-        # try:
-        #     validated_token = UntypedToken(token)
-        #     decoded_data = jwt_decode(validated_token, settings.SECRET_KEY, algorithms=["HS256"])
-        #     self.user = await database_sync_to_async(User.objects.get)(id=decoded_data["user_id"])
-        # except Exception:
-        #     await self.close()
-        #     return
-
-        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
-        await self.accept()
+        user = self.scope["user"]
+        if user.is_anonymous:
+            await self.close()
+        else:
+            await self.channel_layer.group_add(
+                self.room_group_name,
+                self.channel_name
+            )
+            await self.accept()
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
@@ -71,6 +68,5 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # @staticmethod
     @database_sync_to_async
     def save_message(self, room_id, user, content):
-        print(f'user:{user}')
         room = ChatRoom.objects.get(id=room_id)
         return Message.objects.create(room=room, sender=user, content=content)
