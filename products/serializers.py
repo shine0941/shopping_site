@@ -52,3 +52,10 @@ class ProductSerializer(serializers.ModelSerializer):
                 ProductImage.objects.create(product=instance, image=image, order=index)
 
         return instance
+    
+class CartProductSerializer(serializers.ModelSerializer):
+    images = ProductImageSerializer(many=True, read_only=True)
+    class Meta:
+        model = Product
+        fields = ['id', 'name', 'price','images']
+        read_only_fields = ['id', 'name', 'price','images']
