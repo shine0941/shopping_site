@@ -1,25 +1,102 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <!-- <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+  <v-app>
+    <div style="display: flex">
+      <div>
+        <div>
+          <v-app-bar :elevation="2" color="primary">
+            <template v-slot:prepend>
+              <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+            </template>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+            <v-app-bar-title>
+              <div @click="goHome" style="cursor: pointer; width: fit-content">Application Bar</div>
+            </v-app-bar-title>
+            <template v-slot:append>
+              <v-btn v-if="user.token" prepend-icon="mdi-account">
+                {{ user.username }}
+              </v-btn>
+              <!-- cart start -->
+              <v-dialog max-width="500">
+                <template v-slot:activator="{ props: activatorProps }">
+                  <v-btn v-bind="activatorProps" icon="mdi-cart"></v-btn>
+                </template>
 
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
+                <template v-slot:default="{ isActive }">
+                  <v-card title="Cart">
+                    <v-card-text>
+                      {{ user.cartItems }}
+                    </v-card-text>
+
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+
+                      <v-btn text="Close Cart" @click="isActive.value = false"></v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </template>
+              </v-dialog>
+              <!-- cart end -->
+              <v-btn v-if="user.token" icon="mdi-logout" @click="user.logout"></v-btn>
+              <v-btn v-else icon="mdi-login" to="/login/"></v-btn>
+
+              <!-- <v-btn icon="mdi-dots-vertical"></v-btn> -->
+            </template>
+          </v-app-bar>
+        </div>
+      </div>
+      <div>
+        <div>
+          <v-navigation-drawer color="" v-model="drawer">
+            <v-list nav>
+              <v-list-item
+                v-for="d in drawer_list"
+                :title="d.title"
+                link
+                elevation="0"
+                hover
+              ></v-list-item>
+
+              <!-- <v-list-item :title="$vuetify.display.mobile" link></v-list-item> -->
+            </v-list>
+          </v-navigation-drawer>
+        </div>
+        <div>
+          <v-main color="">
+            <RouterView />
+          </v-main>
+        </div>
+      </div>
     </div>
-  </header> -->
-
-  <RouterView />
+  </v-app>
 </template>
+<script setup>
+import { ref, watch } from 'vue'
+import { RouterLink, RouterView, useRouter } from 'vue-router'
+import HelloWorld from './components/HelloWorld.vue'
+import { useUserStore } from '@/stores/user'
+const router = useRouter()
+const drawer = ref(true)
+const user = useUserStore()
 
+const drawer_list = ref([
+  { title: '相機' },
+  { title: '電腦' },
+  { title: '手機' },
+  { title: '平板' },
+])
+
+const goHome = (product) => {
+  console.log('goDetail', product)
+  router.push(`/`)
+}
+</script>
+<style>
+main {
+  /* position: fixed; */
+  /* top: 64px; */
+  /* left: calc(100% - 64px); */
+}
+</style>
 <!-- <style scoped>
 header {
   line-height: 1.5;
