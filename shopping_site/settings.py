@@ -231,4 +231,8 @@ LOGGING = {
     }
 }
 
+
+MEDIA_URL = '/product_images/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'product_images')
+
 # DJANGO_SETTINGS_MODULE=shopping_site.settings uvicorn shopping_site.asgi:application --host 0.0.0.0 --port 8001
