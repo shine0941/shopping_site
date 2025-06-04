@@ -16,25 +16,7 @@
                 {{ user.username }}
               </v-btn>
               <!-- cart start -->
-              <v-dialog max-width="500">
-                <template v-slot:activator="{ props: activatorProps }">
-                  <v-btn v-bind="activatorProps" icon="mdi-cart"></v-btn>
-                </template>
-
-                <template v-slot:default="{ isActive }">
-                  <v-card title="Cart">
-                    <v-card-text>
-                      {{ user.cartItems }}
-                    </v-card-text>
-
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-
-                      <v-btn text="Close Cart" @click="isActive.value = false"></v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </template>
-              </v-dialog>
+              <CartDIalog></CartDIalog>
               <!-- cart end -->
               <v-btn v-if="user.token" icon="mdi-logout" @click="user.logout"></v-btn>
               <v-btn v-else icon="mdi-login" to="/login/"></v-btn>
@@ -72,8 +54,9 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { RouterLink, RouterView, useRouter } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
 import { useUserStore } from '@/stores/user'
+// import HelloWorld from './components/HelloWorld.vue'
+import CartDIalog from './views/CartDIalog.vue'
 const router = useRouter()
 const drawer = ref(true)
 const user = useUserStore()

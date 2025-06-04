@@ -34,6 +34,13 @@ export default {
     console.log('params', params)
     return apiClient.post(`cart/cart-items/`, params, { headers: authHeader() })
   },
+  updateCartItem(id, params) {
+    console.log(id, 'params', params)
+    return apiClient.patch(`cart/cart-items/${id}/`, params, { headers: authHeader() })
+  },
+  removeCartItem(id) {
+    return apiClient.delete(`cart/cart-items/${id}/`, { headers: authHeader() })
+  },
   //   getCategorys() {
   //     return apiClient.get(`categorys/`)
   //   },

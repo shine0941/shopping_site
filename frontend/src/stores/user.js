@@ -1,13 +1,12 @@
 import { defineStore } from 'pinia'
 // import axios from 'axios'
 import api from '@/api/api'
+import { cartStore } from './cart'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
     token: localStorage.getItem('token') || '',
     username: localStorage.getItem('username') || '',
-    cart: localStorage.getItem('cart') || '',
-    cartItems: localStorage.getItem('cartItems') || [],
   }),
   actions: {
     async login(username, password) {
@@ -25,13 +24,8 @@ export const useUserStore = defineStore('user', {
         this.username = res.data.user.full_name
         localStorage.setItem('username', this.username)
 
-        const cartRes = await api.fetchCart()
-        this.cart = cartRes.data[0].id
-        localStorage.setItem('cart', this.cart)
-
-        const cartItemsRes = await api.fetchCartItems()
-        this.cartItems = cartItemsRes.data
-        localStorage.setItem('cartItems', this.cartItems)
+        console.log('call cartStore init')
+        await cartStore().init()
       } catch (err) {
         console.log('error', err)
         throw new Error('登入失敗')

@@ -32,8 +32,10 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '../api/api'
+import { cartStore } from '@/stores/cart'
 const router = useRouter()
 const product_list = ref([])
+const cart = cartStore()
 
 const goDetail = (product) => {
   console.log('goDetail', product)
@@ -44,11 +46,7 @@ const fetchProducts = async () => {
   product_list.value = res.data
 }
 const addToCart = async (product) => {
-  const params = {
-    quantity: 1,
-    product: product.id,
-  }
-  const res = await api.addToCart(params)
+  cart.appendCartItems(product.id)
 }
 
 onMounted(fetchProducts)

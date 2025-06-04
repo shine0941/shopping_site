@@ -34,7 +34,7 @@ class CartItemViewSet(viewsets.ModelViewSet):
         cart = Cart.objects.get(customer=request.user)
         product_id = request.data.get("product")
         quantity = int(request.data.get("quantity", 1))
-
+        print(f"{cart}|{product_id}|{quantity}")
         try:
             product = Product.objects.get(id=product_id)
         except Product.DoesNotExist:
@@ -43,25 +43,26 @@ class CartItemViewSet(viewsets.ModelViewSet):
         cart_item = CartItem.objects.filter(cart=cart, product=product).first()
 
         if cart_item:
+            print('has cart item')
             cart_item.quantity += quantity
             cart_item.save()
             serializer = self.get_serializer(cart_item)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            serializer = self.get_serializer(data={"product": product_id, "quantity": quantity})
+            print('create cart item')
+            serializer = self.get_serializer(data={"product_id": product_id, "quantity": quantity})
             serializer.is_valid(raise_exception=True)
             serializer.save(cart=cart)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    @action(detail=False, methods=["delete"], url_path="remove")
+    @action(detail=True, methods=["delete"], url_path="remove")
     def remove_item(self, request):
-        product_id = request.query_params.get("product")
-        if not product_id:
-            return Response({"error": "缺少 product 參數"}, status=status.HTTP_400_BAD_REQUEST)
+        item = self.get_object()
+        cart = Cart.objects.get(customer=request.user)
+        if not item.cart == cart:
+            return Response({"error": "cart not match"}, status=status.HTTP_401_UNAUTHORIZED)
 
         try:
-            cart = Cart.objects.get(customer=request.user)
-            item = CartItem.objects.get(cart=cart, product__id=product_id)
             item.delete()
             return Response({"message": "商品已從購物車移除"}, status=status.HTTP_204_NO_CONTENT)
         except CartItem.DoesNotExist:
