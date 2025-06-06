@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 import os
 from pathlib import Path
+from datetime import timedelta
+from django.core.management.commands.runserver import Command as runserver
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -234,5 +236,16 @@ LOGGING = {
 
 MEDIA_URL = '/product_images/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'product_images')
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),  # token 有效 30 分鐘
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),     # refresh token 有效 7 天
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': False,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
+runserver.default_port = '8001'        # <-- Your port
+runserver.default_addr = '0.0.0.0'   # <-- Your address
 
 # DJANGO_SETTINGS_MODULE=shopping_site.settings uvicorn shopping_site.asgi:application --host 0.0.0.0 --port 8001
