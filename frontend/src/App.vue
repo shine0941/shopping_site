@@ -3,47 +3,12 @@
     <div style="display: flex">
       <div>
         <div>
-          <v-app-bar :elevation="2" color="primary">
-            <template v-slot:prepend>
-              <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-            </template>
-
-            <v-app-bar-title>
-              <div @click="goHome" style="cursor: pointer; width: fit-content">Application Bar</div>
-            </v-app-bar-title>
-            <template v-slot:append>
-              <v-btn v-if="user.token">
-                <template v-slot:prepend>
-                  <v-icon size="x-large">mdi-account</v-icon>
-                </template>
-                {{ user.username }}
-              </v-btn>
-              <v-divider vertical inset></v-divider>
-              <CartDIalog></CartDIalog>
-              <v-divider vertical inset></v-divider>
-              <v-btn v-if="user.token" icon="mdi-logout" @click="user.logout"></v-btn>
-              <v-btn v-else icon="mdi-login" to="/login/"></v-btn>
-
-              <!-- <v-btn icon="mdi-dots-vertical"></v-btn> -->
-            </template>
-          </v-app-bar>
+          <AppBar @switch-drawer="drawer = !drawer"></AppBar>
         </div>
       </div>
       <div>
         <div>
-          <v-navigation-drawer color="" v-model="drawer">
-            <v-list nav>
-              <v-list-item
-                v-for="d in drawer_list"
-                :title="d.title"
-                link
-                elevation="0"
-                hover
-              ></v-list-item>
-
-              <!-- <v-list-item :title="$vuetify.display.mobile" link></v-list-item> -->
-            </v-list>
-          </v-navigation-drawer>
+          <AppDrawer v-model:drawer="drawer"></AppDrawer>
         </div>
         <div>
           <v-main color="">
@@ -58,25 +23,12 @@
 import { ref, watch, onMounted } from 'vue'
 import { RouterLink, RouterView, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
-import { cartStore } from './stores/cart'
-// import HelloWorld from './components/HelloWorld.vue'
-import CartDIalog from './views/CartDIalog.vue'
-const router = useRouter()
+import AppBar from './components/AppBar.vue'
+import AppDrawer from './components/AppDrawer.vue'
+
 const drawer = ref(true)
 const user = useUserStore()
-const cart = cartStore()
 
-const drawer_list = ref([
-  { title: '相機' },
-  { title: '電腦' },
-  { title: '手機' },
-  { title: '平板' },
-])
-
-const goHome = (product) => {
-  console.log('goDetail', product)
-  router.push(`/`)
-}
 const mountedLog = () => {
   console.log('mountedLog onMounted')
   user.init()
