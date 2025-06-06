@@ -7,7 +7,10 @@ export const cartStore = defineStore('cart', {
     cartItems: JSON.parse(localStorage.getItem('cartItems')) || [],
   }),
   actions: {
-    async init() {
+    init() {
+      console.log('cartStore init')
+    },
+    async initCartStore() {
       console.log('cartStore init')
       const cartRes = await api.fetchCart()
       this.cart = cartRes.data[0].id
@@ -37,6 +40,13 @@ export const cartStore = defineStore('cart', {
         const res = await api.removeCartItem(item.id)
       }
       this.fetchCartItems()
+    },
+    clearCartStore() {
+      console.log('clearCartStore')
+      this.cart = ''
+      this.cartItems = []
+      localStorage.removeItem('cart')
+      localStorage.removeItem('cartItems')
     },
   },
 })

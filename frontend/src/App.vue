@@ -12,12 +12,15 @@
               <div @click="goHome" style="cursor: pointer; width: fit-content">Application Bar</div>
             </v-app-bar-title>
             <template v-slot:append>
-              <v-btn v-if="user.token" prepend-icon="mdi-account">
+              <v-btn v-if="user.token">
+                <template v-slot:prepend>
+                  <v-icon size="x-large">mdi-account</v-icon>
+                </template>
                 {{ user.username }}
               </v-btn>
-              <!-- cart start -->
+              <v-divider vertical inset></v-divider>
               <CartDIalog></CartDIalog>
-              <!-- cart end -->
+              <v-divider vertical inset></v-divider>
               <v-btn v-if="user.token" icon="mdi-logout" @click="user.logout"></v-btn>
               <v-btn v-else icon="mdi-login" to="/login/"></v-btn>
 
@@ -52,14 +55,16 @@
   </v-app>
 </template>
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { RouterLink, RouterView, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
+import { cartStore } from './stores/cart'
 // import HelloWorld from './components/HelloWorld.vue'
 import CartDIalog from './views/CartDIalog.vue'
 const router = useRouter()
 const drawer = ref(true)
 const user = useUserStore()
+const cart = cartStore()
 
 const drawer_list = ref([
   { title: '相機' },
@@ -72,6 +77,11 @@ const goHome = (product) => {
   console.log('goDetail', product)
   router.push(`/`)
 }
+const mountedLog = () => {
+  console.log('mountedLog onMounted')
+  user.init()
+}
+onMounted(mountedLog)
 </script>
 <style>
 main {

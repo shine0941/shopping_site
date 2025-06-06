@@ -1,4 +1,6 @@
 import axios from 'axios'
+import router from '@/router'
+import { useUserStore } from '@/stores/user'
 
 const apiClient = axios.create({
   baseURL: 'http://192.168.1.100:8001/',
@@ -11,6 +13,20 @@ function authHeader() {
   const token = localStorage.getItem('token')
   return token ? { Authorization: `Bearer ${token}` } : {}
 }
+
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    console.log('apiClient error', error)
+    const userStore = useUserStore()
+    if (error.response && error.response.status === 401) {
+      userStore.logout()
+      router.push('/login')
+    }
+    return Promise.reject(error)
+  },
+)
+
 export default {
   fetchProducts(page = 1, params = {}) {
     console.log('getProducts params', params)
@@ -23,6 +39,10 @@ export default {
   login(params) {
     console.log('login', params)
     return apiClient.post(`/users/customer/login/`, params)
+  },
+  refresh(params) {
+    console.log('login', params)
+    return apiClient.post(`/api/token/refresh/`, params)
   },
   fetchCart() {
     return apiClient.get(`cart/carts/`, { headers: authHeader() })

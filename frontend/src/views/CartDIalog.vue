@@ -1,13 +1,30 @@
 <template>
   <v-dialog max-width="500">
     <template v-slot:activator="{ props: activatorProps }">
-      <v-btn v-bind="activatorProps" icon="mdi-cart"></v-btn>
+      <v-btn v-bind="activatorProps" icon="mdi-cart">
+        <v-icon>mdi-cart</v-icon>
+        <!-- <div style="position: absolute; top: 0; right: 0">
+          {{ cart.cartItems.length }}
+        </div> -->
+        <div v-if="cart.cartItems.length > 0">
+          {{ cart.cartItems.length }}
+        </div>
+      </v-btn>
     </template>
 
     <template v-slot:default="{ isActive }">
-      <v-card title="Cart">
+      <v-card>
+        <v-row>
+          <v-col>
+            <v-card-title> Cart </v-card-title>
+          </v-col>
+          <v-col style="text-align: right">
+            <!-- <v-icon @click="isActive.value = false">mdi-close</v-icon> -->
+          </v-col>
+        </v-row>
+
         <v-card-text>
-          <template v-if="cart.cartItems">
+          <template v-if="cart.cartItems.length > 0">
             <v-list>
               <v-list-item v-for="item in cart.cartItems" :key="item.id">
                 <template v-slot:prepend>
@@ -42,9 +59,14 @@
         </v-card-text>
 
         <v-card-actions>
-          <v-spacer></v-spacer>
-
           <v-btn text="Close Cart" @click="isActive.value = false"></v-btn>
+          <v-spacer></v-spacer>
+          <v-btn
+            text="Checkout"
+            prepend-icon="mdi-cart"
+            @clicl=""
+            :disabled="cart.cartItems.length == 0"
+          ></v-btn>
         </v-card-actions>
       </v-card>
     </template>
