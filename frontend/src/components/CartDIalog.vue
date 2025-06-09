@@ -64,7 +64,8 @@
           <v-btn
             text="Checkout"
             prepend-icon="mdi-cart"
-            @clicl=""
+            to="/checkout/"
+            @click="isActive.value = false"
             :disabled="cart.cartItems.length == 0"
           ></v-btn>
         </v-card-actions>
@@ -74,10 +75,9 @@
 </template>
 <script setup>
 import { onMounted, watch } from 'vue'
-import { useUserStore } from '@/stores/user'
 import { cartStore } from '@/stores/cart'
-// import
-const user = useUserStore()
+// import { useUserStore } from '@/stores/user'
+// const user = useUserStore()
 const cart = cartStore()
 const showCartItems = () => {
   console.log('cartItems', typeof cart.cartItems, cart.cartItems)
