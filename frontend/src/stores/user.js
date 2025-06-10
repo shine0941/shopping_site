@@ -36,6 +36,10 @@ export const useUserStore = defineStore('user', {
         console.log('no token')
         this.handleNoToken(need_login)
       }
+      if (this.token) {
+        console.log('user init cart')
+        cartStore().initCartStore()
+      }
     },
     handleNoToken(need_login = false) {
       cartStore().clearCartStore()
