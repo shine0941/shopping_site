@@ -33,7 +33,7 @@
                         @update:model-value="handleItemChange(item)"
                       ></v-number-input>
                     </td>
-                    <td class="text-end">{{ item.product.price }}</td>
+                    <td class="text-end">{{ parseInt(item.product.price) }}</td>
                     <td class="text-end">{{ caculateCartItemSubtotal(item) }}</td>
                   </tr>
                 </tbody>
@@ -111,7 +111,11 @@
     <br />
     <v-row>
       <v-col class="text-end">
-        <v-btn color="primary" :disabled="stepper != stepper_items.length" @click="checkout"
+        <v-btn
+          color="primary"
+          :disabled="stepper != stepper_items.length"
+          @click="checkout"
+          :loading="loading"
           >Checkout</v-btn
         >
       </v-col>
@@ -120,36 +124,45 @@
 </template>
 <script setup>
 import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { cartStore } from '@/stores/cart'
 import { useUserStore } from '@/stores/user'
 // const user = useUserStore()
 const cart = cartStore()
-const shipping = ref(0)
+const router = useRouter()
+const shipping = ref(60)
 const shipping_data = ref([
-  { name: 'Standard Shipping', price: 60 },
-  { name: 'Priority Shipping', price: 100 },
-  { name: 'Express Shipping', price: 200 },
+  { name: 'Standard Shipping(+60)', price: 60 },
+  // { name: 'Priority Shipping(+100)', price: 100 },
+  // { name: 'Express Shipping(+200)', price: 200 },
 ])
 const stepper = ref(null)
 const stepper_items = ref(['Step 1', 'Step 2', 'Step 3'])
-const showCartItems = () => {
-  console.log(JSON.stringify(cart.cartItems))
-}
+const loading = ref(false)
 const caculateCartItemSubtotal = (item) => {
-  return item.quantity * Number(item.product.price)
+  return parseInt(item.quantity * Number(item.product.price))
 }
 const caculateCartSubtotal = () => {
   let subtotal = 0
   for (const item of cart.cartItems) {
     subtotal += item.quantity * Number(item.product.price)
   }
-
-  return subtotal
+  return parseInt(subtotal)
 }
 const handleItemChange = async (item) => {
   console.log('handleItemChange', item)
   await cart.updateCartItem(item)
 }
-const checkout = () => {}
-onMounted(showCartItems)
+const checkout = async () => {
+  loading.value = true
+  console.log('checkout')
+  const res = await cart.checkout()
+  console.log('res', res)
+  if (res.status == 201) {
+    loading.value = false
+    const order = res.data.id
+    router.push(`/checkoutresult/${order}`)
+  } else {
+  }
+}
 </script>

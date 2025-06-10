@@ -41,6 +41,12 @@ export const cartStore = defineStore('cart', {
       }
       this.fetchCartItems()
     },
+    async checkout() {
+      const params = {}
+      const res = await api.createOrder(params)
+      console.log('res', res)
+      return res
+    },
     clearCartStore() {
       console.log('clearCartStore')
       this.cart = ''

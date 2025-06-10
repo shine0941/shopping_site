@@ -8,5 +8,10 @@ export const orderStore = defineStore('order', {
       const res = await api.fetchOrders()
       return res.data
     },
+    async getOrder(id) {
+      console.log('getOrder', id)
+      const res = await api.fetchOrder(id)
+      return res.data
+    },
   },
 })
