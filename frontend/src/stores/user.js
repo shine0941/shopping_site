@@ -17,10 +17,9 @@ export const useUserStore = defineStore('user', {
       const refresh = localStorage.getItem('refresh')
       const username = localStorage.getItem('username')
       if (token) {
-        console.log('has stored token')
-        if (this.isTokenExpired(this.token)) {
+        if (this.isTokenExpired(token)) {
           console.log('token expired')
-          if (this.refresh && !this.isTokenExpired(this.refresh)) {
+          if (refresh && !this.isTokenExpired(refresh)) {
             console.log('call refreshAccess')
             this.refreshAccess()
           } else {
@@ -99,6 +98,7 @@ export const useUserStore = defineStore('user', {
         const now = Date.now() / 1000 // 秒
         return decoded.exp < now
       } catch (err) {
+        console.log('isTokenExpired err', err)
         return true
       }
     },
