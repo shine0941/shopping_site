@@ -31,7 +31,7 @@ export default {
   fetchProducts(page = 1, params = {}) {
     console.log('getProducts params', params)
     // return apiClient.get(`products/?page=${page}`, { params: params })
-    return apiClient.get(`products/products/`)
+    return apiClient.get(`products/products/`, { params: params })
   },
   fetchProduct(id) {
     return apiClient.get(`products/products/${id}/`)
@@ -67,6 +67,10 @@ export default {
   fetchOrders() {
     console.log('api fetchOrders')
     return apiClient.get(`orders/orders/`, { headers: authHeader() })
+  },
+  fetchOrder(id) {
+    console.log('api fetchOrder', id)
+    return apiClient.get(`orders/orders/${id}/`, { headers: authHeader() })
   },
   //   getCategorys() {
   //     return apiClient.get(`categorys/`)

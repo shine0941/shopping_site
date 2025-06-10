@@ -29,11 +29,12 @@
   </v-container>
 </template>
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted, watch } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import api from '../api/api'
 import { cartStore } from '@/stores/cart'
 const router = useRouter()
+const route = useRoute()
 const product_list = ref([])
 const cart = cartStore()
 
@@ -42,7 +43,12 @@ const goDetail = (product) => {
   router.push(`/products/${product.id}`)
 }
 const fetchProducts = async () => {
-  const res = await api.fetchProducts()
+  const params = {}
+  console.log('route.params.category', route.params.category)
+  if (route.params.category) {
+    params['category'] = route.params.category
+  }
+  const res = await api.fetchProducts(1, params)
   product_list.value = res.data
 }
 const addToCart = async (product) => {
@@ -50,4 +56,5 @@ const addToCart = async (product) => {
 }
 
 onMounted(fetchProducts)
+watch(route, fetchProducts, { immediate: true, deep: true })
 </script>
