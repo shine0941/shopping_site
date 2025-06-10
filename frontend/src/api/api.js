@@ -61,6 +61,13 @@ export default {
   removeCartItem(id) {
     return apiClient.delete(`cart/cart-items/${id}/`, { headers: authHeader() })
   },
+  createOrder(params = {}) {
+    return apiClient.post(`orders/create/`, params, { headers: authHeader() })
+  },
+  fetchOrders() {
+    console.log('api fetchOrders')
+    return apiClient.get(`orders/orders/`, { headers: authHeader() })
+  },
   //   getCategorys() {
   //     return apiClient.get(`categorys/`)
   //   },

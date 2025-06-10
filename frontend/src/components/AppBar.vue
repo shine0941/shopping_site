@@ -5,15 +5,16 @@
     </template>
 
     <v-app-bar-title>
-      <div @click="goHome" style="cursor: pointer; width: fit-content">Application Bar</div>
+      <div @click="goHome" style="cursor: pointer; width: fit-content">Shopping.com</div>
     </v-app-bar-title>
     <template v-slot:append>
-      <v-btn v-if="user.token">
+      <!-- <v-btn v-if="user.token">
         <template v-slot:prepend>
           <v-icon size="x-large">mdi-account</v-icon>
         </template>
         {{ user.username }}
-      </v-btn>
+      </v-btn> -->
+      <UserDialog></UserDialog>
       <v-divider vertical inset></v-divider>
       <CartDIalog></CartDIalog>
       <v-divider vertical inset></v-divider>
@@ -29,6 +30,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import CartDIalog from './CartDIalog.vue'
+import UserDialog from './UserDialog.vue'
 
 const emit = defineEmits(['switch-drawer'])
 const user = useUserStore()
