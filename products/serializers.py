@@ -57,5 +57,5 @@ class CartProductSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True)
     class Meta:
         model = Product
-        fields = ['id', 'name', 'price','images']
-        read_only_fields = ['id', 'name', 'price','images']
+        fields = ['id', 'name', 'price','images','discount_percent']
+        read_only_fields = ['id', 'name', 'price','images','discount_percent']

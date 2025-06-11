@@ -95,9 +95,17 @@
                     <tr v-for="item in order.items">
                       <td>{{ item.product.name }}</td>
                       <td>{{ item.quantity }}</td>
-                      <td class="text-end">{{ parseInt(item.product.price) }}</td>
+                      <td class="text-end">{{ parseInt(item.unit_price) }}</td>
                       <td class="text-end">{{ caculateCartItemSubtotal(item) }}</td>
                     </tr>
+                    <tr>
+                      <td>Shipping Fee</td>
+                      <td></td>
+                      <td></td>
+                      <td class="text-end">{{ parseInt(order.shipping_fee) }}</td>
+                    </tr>
+                    <!-- coupon -->
+                    <!-- discount -->
                   </tbody>
                 </v-table>
               </v-card-text>
@@ -128,7 +136,7 @@ const fetchOrders = async () => {
   console.log(order_list.value[0])
 }
 const caculateCartItemSubtotal = (item) => {
-  return parseInt(item.quantity * Number(item.product.price))
+  return parseInt(item.quantity * Number(item.unit_price))
 }
 const formatToTaiwanTime = (utcString) => {
   const utcDate = new Date(utcString)

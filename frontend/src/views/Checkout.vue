@@ -33,7 +33,9 @@
                         @update:model-value="handleItemChange(item)"
                       ></v-number-input>
                     </td>
-                    <td class="text-end">{{ parseInt(item.product.price) }}</td>
+                    <td class="text-end">
+                      {{ parseInt(item.product.price * (item.product.discount_percent / 100)) }}
+                    </td>
                     <td class="text-end">{{ caculateCartItemSubtotal(item) }}</td>
                   </tr>
                 </tbody>
@@ -82,7 +84,9 @@
                     </td>
                     <td>{{ item.product.name }}</td>
                     <td>{{ item.quantity }}</td>
-                    <td class="text-end">{{ item.product.price }}</td>
+                    <td class="text-end">
+                      {{ parseInt(item.product.price * (item.product.discount_percent / 100)) }}
+                    </td>
                     <td class="text-end">{{ caculateCartItemSubtotal(item) }}</td>
                   </tr>
                 </tbody>
@@ -140,12 +144,14 @@ const stepper = ref(null)
 const stepper_items = ref(['Step 1', 'Step 2', 'Step 3'])
 const loading = ref(false)
 const caculateCartItemSubtotal = (item) => {
-  return parseInt(item.quantity * Number(item.product.price))
+  return parseInt(
+    item.quantity * parseInt(item.product.price * (item.product.discount_percent / 100)),
+  )
 }
 const caculateCartSubtotal = () => {
   let subtotal = 0
   for (const item of cart.cartItems) {
-    subtotal += item.quantity * Number(item.product.price)
+    subtotal += item.quantity * parseInt(item.product.price * (item.product.discount_percent / 100))
   }
   return parseInt(subtotal)
 }

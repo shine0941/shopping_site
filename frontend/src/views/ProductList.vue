@@ -4,11 +4,23 @@
     <!-- <v-row>sort</v-row> -->
     <v-row>
       <v-col v-for="(product, i) in product_list" :cols="3">
-        <v-card color="primary" style="height: 50vh" variant="outlined" elevation="16" hover>
+        <v-card color="primary" style="height: 56vh" variant="outlined" elevation="16" hover>
           <div style="height: 30vh; background-color: white; align-content: center">
             <v-img :src="product.images[0].image"></v-img>
           </div>
           <v-card-title class="text-wrap" style="height: 14vh">{{ product.name }}</v-card-title>
+          <v-card-text style="text-align: right">
+            <template v-if="product.discount_percent != 100">
+              <h3>
+                <del>${{ product.price }}</del> ${{
+                  parseInt(product.price * (product.discount_percent / 100))
+                }}
+              </h3>
+            </template>
+            <template v-else>
+              <h3>${{ product.price }}</h3>
+            </template>
+          </v-card-text>
           <v-card-actions>
             <v-col>
               <ProductDetailDialog v-model:product_info="product_list[i]"></ProductDetailDialog>

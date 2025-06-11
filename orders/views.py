@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status, permissions, generics
 from django.utils import timezone
 from django.db import transaction, IntegrityError
+from decimal import Decimal
 
 from .models import Order, OrderItem, OrderStatus
 from cart.models import Cart, CartItem
@@ -24,7 +25,7 @@ class CreateOrderView(APIView):
                 return Response({"error": "購物車是空的"}, status=status.HTTP_400_BAD_REQUEST)
 
             # 原始總價
-            total_price = sum(item.product.price * item.quantity for item in cart_items)
+            total_price = sum(int(item.product.price * Decimal(item.product.discount_percent / 100)) * item.quantity for item in cart_items)
             shipping_fee = 60  # 先寫死，後續可調整
             actual_price = total_price + shipping_fee
 
@@ -58,7 +59,7 @@ class CreateOrderView(APIView):
                         shipping_fee=shipping_fee,
                         coupon=coupon,
                         merchant_summary={},  # 先留空，或根據商家分類進一步處理
-                        status=OrderStatus.UNPAID
+                        order_status=OrderStatus.UNPAID
                     )
                     
                     if coupon:
@@ -70,7 +71,7 @@ class CreateOrderView(APIView):
                             order=order,
                             product=item.product,
                             quantity=item.quantity,
-                            unit_price=item.product.price,
+                            unit_price=int(item.product.price * Decimal(item.product.discount_percent / 100))
                         )
 
                         print(f"product {item.product} inventory & sold_count update")
@@ -90,6 +91,7 @@ class CreateOrderView(APIView):
                 return Response({"error": "IntegrityError"}, status=status.HTTP_400_BAD_REQUEST)    
             except Exception as e:
                 # Handle other exceptions
+                print(f"error:{e}")
                 return Response({"error": "Exception error"}, status=status.HTTP_400_BAD_REQUEST)
 
         except Cart.DoesNotExist:
