@@ -30,10 +30,10 @@ class Order(models.Model):
     payment_method = models.CharField(max_length=50, blank=True)  # e.g., credit_card, line_pay
     payment_status = models.CharField(max_length=20, default="unpaid")  # unpaid, paid, failed
     paid_at = models.DateTimeField(null=True, blank=True)
-    status = models.PositiveSmallIntegerField(choices=OrderStatus.choices,default=OrderStatus.INIT)
+    order_status = models.PositiveSmallIntegerField(choices=OrderStatus.choices,default=OrderStatus.INIT)
 
     def __str__(self):
-        return f"Order #{self.id} - {self.customer.user.email}"
+        return f"Order #{self.id} - {self.customer.email}"
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')

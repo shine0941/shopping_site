@@ -17,5 +17,5 @@ class OrderSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'customer', 'created_at', 'total_price',
             'actual_price', 'shipping_fee', 'coupon',
-            'merchant_summary', 'items','status'
+            'merchant_summary', 'items','order_status'
         ]
