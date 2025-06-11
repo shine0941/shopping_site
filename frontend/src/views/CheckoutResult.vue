@@ -2,10 +2,10 @@
   <v-container style="max-width: 100vw">
     <v-row>
       <v-col>
-        <v-card style="width: 50vw">
+        <v-card style="width: 50vw" variant="outlined">
           <v-card-title style="text-align: center">謝謝您的訂購</v-card-title>
           <v-card-subtitle style="text-align: center">
-            訂單編號:#{{ order_data.id }} 已成立
+            訂單編號:#{{ String(order_data.id).padStart(6, '0') }} 已成立
           </v-card-subtitle>
           <v-card-text style="text-align: center">
             <v-table>
@@ -20,6 +20,11 @@
               </tbody>
             </v-table>
           </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" variant="outlined" to="/orderhistory/">go history</v-btn>
+            <v-spacer></v-spacer>
+          </v-card-actions>
         </v-card>
       </v-col>
     </v-row>
