@@ -45,6 +45,9 @@ export const cartStore = defineStore('cart', {
       const params = {}
       const res = await api.createOrder(params)
       console.log('res', res)
+      if (res.status == 201) {
+        this.clearCartStore()
+      }
       return res
     },
     clearCartStore() {
