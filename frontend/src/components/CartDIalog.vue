@@ -1,15 +1,16 @@
 <template>
   <v-dialog max-width="500">
     <template v-slot:activator="{ props: activatorProps }">
-      <v-btn v-bind="activatorProps" icon="mdi-cart">
-        <v-icon>mdi-cart</v-icon>
-        <!-- <div style="position: absolute; top: 0; right: 0">
-          {{ cart.cartItems.length }}
-        </div> -->
-        <div v-if="cart.cartItems.length > 0">
-          {{ cart.cartItems.length }}
-        </div>
-      </v-btn>
+      <v-tooltip text="Cart" location="bottom">
+        <template v-slot:activator="{ props }">
+          <v-btn v-bind="mergeProps(activatorProps, props)" icon="mdi-cart">
+            <v-icon>mdi-cart</v-icon>
+            <div v-if="cart.cartItems.length > 0">
+              {{ cart.cartItems.length }}
+            </div>
+          </v-btn>
+        </template>
+      </v-tooltip>
     </template>
 
     <template v-slot:default="{ isActive }">
@@ -18,9 +19,7 @@
           <v-col>
             <v-card-title> Cart </v-card-title>
           </v-col>
-          <v-col style="text-align: right">
-            <!-- <v-icon @click="isActive.value = false">mdi-close</v-icon> -->
-          </v-col>
+          <v-col style="text-align: right"> </v-col>
         </v-row>
 
         <v-card-text>
@@ -48,8 +47,6 @@
                     <v-icon>mdi-close</v-icon>
                   </div>
                 </template>
-
-                <!-- {{ item.product.name }}{{ item.quantity }} -->
               </v-list-item>
             </v-list>
           </template>
@@ -59,7 +56,7 @@
         </v-card-text>
 
         <v-card-actions>
-          <v-btn text="Close Cart" @click="isActive.value = false"></v-btn>
+          <v-btn text="Close Cart" @click="isActive.value = false" prepend-icon="mdi-close"></v-btn>
           <v-spacer></v-spacer>
           <v-btn
             text="Checkout"
@@ -74,17 +71,10 @@
   </v-dialog>
 </template>
 <script setup>
-import { onMounted, watch } from 'vue'
+import { mergeProps } from 'vue'
 import { cartStore } from '@/stores/cart'
-// import { useUserStore } from '@/stores/user'
-// const user = useUserStore()
 const cart = cartStore()
-const showCartItems = () => {
-  console.log('cartItems', typeof cart.cartItems, cart.cartItems)
-}
 const handleItemChange = async (item) => {
-  console.log(item)
   await cart.updateCartItem(item)
 }
-onMounted(showCartItems)
 </script>

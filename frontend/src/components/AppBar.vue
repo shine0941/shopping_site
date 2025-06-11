@@ -18,8 +18,16 @@
       <v-divider vertical inset></v-divider>
       <CartDIalog></CartDIalog>
       <v-divider vertical inset></v-divider>
-      <v-btn v-if="user.token" icon="mdi-logout" @click="user.logout"></v-btn>
-      <v-btn v-else icon="mdi-login" to="/login/"></v-btn>
+      <v-tooltip v-if="user.token" text="Logout" location="bottom">
+        <template v-slot:activator="{ props }">
+          <v-btn v-bind="props" icon="mdi-logout" @click="user.logout"></v-btn>
+        </template>
+      </v-tooltip>
+      <v-tooltip v-else text="Login" location="bottom">
+        <template v-slot:activator="{ props }">
+          <v-btn v-bind="props" icon="mdi-login" to="/login/"></v-btn>
+        </template>
+      </v-tooltip>
 
       <!-- <v-btn icon="mdi-dots-vertical"></v-btn> -->
     </template>
