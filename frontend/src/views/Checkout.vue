@@ -20,7 +20,7 @@
                     <td>
                       <v-img :src="item.product.images[0].image" style="width: 50px"></v-img>
                     </td>
-                    <td>{{ item.product.name }}</td>
+                    <td style="width: 50%">{{ item.product.name }}</td>
                     <td>
                       <v-number-input
                         v-model="item.quantity"
