@@ -4,7 +4,7 @@ from rest_framework import status, permissions, generics
 from django.utils import timezone
 from django.db import transaction, IntegrityError
 
-from .models import Order, OrderItem
+from .models import Order, OrderItem, OrderStatus
 from cart.models import Cart, CartItem
 from coupons.models import Coupon
 from .serializers import OrderSerializer
@@ -58,6 +58,7 @@ class CreateOrderView(APIView):
                         shipping_fee=shipping_fee,
                         coupon=coupon,
                         merchant_summary={},  # 先留空，或根據商家分類進一步處理
+                        status=OrderStatus.UNPAID
                     )
                     
                     if coupon:
@@ -71,6 +72,12 @@ class CreateOrderView(APIView):
                             quantity=item.quantity,
                             unit_price=item.product.price,
                         )
+
+                        print(f"product {item.product} inventory & sold_count update")
+                        target_product = item.product
+                        target_product.inventory -= item.quantity
+                        target_product.sold_count += item.quantity
+                        target_product.save()
 
                     # 清空購物車
                     cart_items.delete()

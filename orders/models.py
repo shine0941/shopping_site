@@ -4,6 +4,20 @@ from products.models import Product
 from coupons.models import Coupon  # 後面會建立
 # from django.contrib.postgres.fields import JSONField  # PostgreSQL 專用
 
+class OrderStatus(models.IntegerChoices):
+    INIT = 0, "Init"
+
+    UNPAID = 10, "Unpaid"
+    PAID = 11, "Paid"
+
+    PROCESSING = 20,"Processing"
+    READYFORPICKUP = 21, "Ready for pickup"
+    OUTOFDELIVERY = 22, "Out of delivery"
+    DELIVERED = 23, "Delivered"
+
+    FAILED = 90, "Failed"
+    FAILEDPAYMENT = 91, "Payment failed"
+
 class Order(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -16,6 +30,8 @@ class Order(models.Model):
     payment_method = models.CharField(max_length=50, blank=True)  # e.g., credit_card, line_pay
     payment_status = models.CharField(max_length=20, default="unpaid")  # unpaid, paid, failed
     paid_at = models.DateTimeField(null=True, blank=True)
+    status = models.PositiveSmallIntegerField(choices=OrderStatus.choices,default=OrderStatus.INIT)
+
     def __str__(self):
         return f"Order #{self.id} - {self.customer.user.email}"
 
