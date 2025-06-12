@@ -6,7 +6,9 @@
       <v-col v-for="(product, i) in product_list" :cols="3">
         <v-card color="primary" style="height: 56vh" variant="outlined" elevation="16" hover>
           <div style="height: 30vh; background-color: white; align-content: center">
-            <v-img :src="product.images[0].image"></v-img>
+            <v-img :src="product.images[0].image">
+              <ProductLabel v-model:product_info="product_list[i]"></ProductLabel>
+            </v-img>
           </div>
           <v-card-title class="text-wrap" style="height: 14vh">{{ product.name }}</v-card-title>
           <v-card-text style="text-align: right">
@@ -42,6 +44,7 @@ import { useRoute } from 'vue-router'
 import api from '../api/api'
 import { cartStore } from '@/stores/cart'
 import ProductDetailDialog from '@/components/ProductDetailDialog.vue'
+import ProductLabel from '@/components/ProductLabel.vue'
 const route = useRoute()
 const product_list = ref([])
 const cart = cartStore()
