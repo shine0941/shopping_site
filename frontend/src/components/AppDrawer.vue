@@ -3,27 +3,29 @@
     <v-list nav>
       <v-list-item
         v-for="d in drawer_list"
-        :title="d.title"
-        :to="d.to"
+        :title="d.name"
+        :to="'/' + d.id"
         link
         elevation="0"
         hover
       ></v-list-item>
-
-      <!-- <v-list-item :title="$vuetify.display.mobile" link></v-list-item> -->
     </v-list>
   </v-navigation-drawer>
 </template>
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
+import api from '@/api/api'
 const props = defineProps({
   drawer: Boolean,
 })
-
-const drawer_list = ref([
-  { title: '相機', to: '/1' },
-  { title: '電腦', to: '/2' },
-  { title: '手機', to: '/3' },
-  { title: '平板', to: '/4' },
-])
+const drawer_list = ref([])
+const initCategory = async () => {
+  const res = await api.fetchProductCategories()
+  drawer_list.value = res.data.map((category) => {
+    return {
+      ...category,
+    }
+  })
+}
+onMounted(initCategory)
 </script>

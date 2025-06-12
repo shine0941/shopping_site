@@ -72,6 +72,9 @@ export default {
     console.log('api fetchOrder', id)
     return apiClient.get(`orders/orders/${id}/`, { headers: authHeader() })
   },
+  fetchProductCategories() {
+    return apiClient.get(`products/categories/`)
+  },
   //   getCategorys() {
   //     return apiClient.get(`categorys/`)
   //   },
