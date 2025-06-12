@@ -86,8 +86,6 @@ class CustomerView(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        print(user)
-        print(model_to_dict(user))
         if user.is_superuser:
             return Customer.objects.all()
         return Customer.objects.none()

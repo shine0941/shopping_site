@@ -11,6 +11,9 @@ from coupons.models import Coupon
 from .serializers import OrderSerializer
 from core.permissions import IsMerchantUser
 from products.models import Product
+import logging
+
+logger = logging.getLogger(__name__)
 
 class CreateOrderView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -74,7 +77,7 @@ class CreateOrderView(APIView):
                             unit_price=int(item.product.price * Decimal(item.product.discount_percent / 100))
                         )
 
-                        print(f"product {item.product} inventory & sold_count update")
+                        logger.info(f"product {item.product} inventory & sold_count update")
                         target_product = item.product
                         target_product.inventory -= item.quantity
                         target_product.sold_count += item.quantity
@@ -91,7 +94,7 @@ class CreateOrderView(APIView):
                 return Response({"error": "IntegrityError"}, status=status.HTTP_400_BAD_REQUEST)    
             except Exception as e:
                 # Handle other exceptions
-                print(f"error:{e}")
+                logger.error(f"Create Order Exception:{e}")
                 return Response({"error": "Exception error"}, status=status.HTTP_400_BAD_REQUEST)
 
         except Cart.DoesNotExist:

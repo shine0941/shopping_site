@@ -7,6 +7,9 @@ from rest_framework.decorators import action
 from .models import Cart,CartItem
 from .serializers import CartSerializer,CartItemSerializer
 from products.models import Product
+import logging
+
+logger = logging.getLogger(__name__)
 
 class CartViewSet(viewsets.ModelViewSet):
     serializer_class = CartSerializer
@@ -34,7 +37,7 @@ class CartItemViewSet(viewsets.ModelViewSet):
         cart = Cart.objects.get(customer=request.user)
         product_id = request.data.get("product")
         quantity = int(request.data.get("quantity", 1))
-        print(f"{cart}|{product_id}|{quantity}")
+        logger.info(f"cart item create=>cart:{cart}|product:{product_id}|quantity:{quantity}")
         try:
             product = Product.objects.get(id=product_id)
         except Product.DoesNotExist:
@@ -43,13 +46,13 @@ class CartItemViewSet(viewsets.ModelViewSet):
         cart_item = CartItem.objects.filter(cart=cart, product=product).first()
 
         if cart_item:
-            print('has cart item')
+            logger.info('update existed cart item')
             cart_item.quantity += quantity
             cart_item.save()
             serializer = self.get_serializer(cart_item)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            print('create cart item')
+            logger.info('create new cart item')
             serializer = self.get_serializer(data={"product_id": product_id, "quantity": quantity})
             serializer.is_valid(raise_exception=True)
             serializer.save(cart=cart)

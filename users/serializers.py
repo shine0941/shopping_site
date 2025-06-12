@@ -2,9 +2,9 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from .models import AdminUser,User, Customer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+import logging
 
-
-# User = get_user_model()
+logger = logging.getLogger(__name__)
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -120,7 +120,7 @@ class CustomerTokenObtainPairSerializer(TokenObtainPairSerializer):
             }
         # except customer_user.DoesNotExist:
         except Exception as e:
-            print(f"error:{e}")
+            logger.error(f"error:{e}")
             raise serializers.ValidationError('此帳號不是後台使用者')
 
         return data
