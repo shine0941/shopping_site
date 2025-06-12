@@ -102,4 +102,4 @@ class Command(BaseCommand):
             9: (3000, 20000),   # 螢幕
             10: (2000, 15000),  # 智慧手錶
         }
-        return round(random.uniform(*ranges[category]), 2)
+        return round(random.uniform(*ranges[category]), 0)
