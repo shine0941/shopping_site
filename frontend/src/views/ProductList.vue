@@ -7,6 +7,11 @@
       </v-col>
     </v-row>
     <v-row>
+      <v-col>
+        <v-pagination v-model:model-value="page" :length="page_amount"></v-pagination>
+      </v-col>
+    </v-row>
+    <v-row>
       <v-col v-for="(product, i) in product_list" :cols="3">
         <v-card color="primary" style="height: 56vh" variant="outlined" elevation="16" hover>
           <div style="height: 30vh; background-color: white; align-content: center">
@@ -40,6 +45,11 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-row>
+      <v-col>
+        <v-pagination v-model:model-value="page" :length="page_amount"></v-pagination>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 <script setup>
@@ -54,14 +64,17 @@ const route = useRoute()
 const product_list = ref([])
 const cart = cartStore()
 const ordering = ref('-created_at')
+const page_amount = ref(0)
+const page = ref(1)
 
 const fetchProducts = async () => {
   const params = {}
   if (route.params.category) {
     params['category'] = route.params.category
   }
-  const res = await api.fetchProducts(1, params, ordering.value)
-  product_list.value = res.data
+  const res = await api.fetchProducts(page.value, params, ordering.value)
+  product_list.value = res.data.results
+  page_amount.value = res.data.total_pages
 }
 const addToCart = async (product) => {
   cart.appendCartItems(product.id)
@@ -71,6 +84,14 @@ const changeOrdering = (new_ordering) => {
   console.log(ordering.value)
 }
 onMounted(fetchProducts)
-watch(route, fetchProducts, { immediate: true, deep: true })
+watch(
+  route,
+  () => {
+    page.value = 1
+    fetchProducts()
+  },
+  { immediate: true, deep: true },
+)
 watch(ordering, fetchProducts, { immediate: true })
+watch(page, fetchProducts, { immediate: true })
 </script>

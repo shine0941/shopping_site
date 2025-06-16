@@ -4,6 +4,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .models import Product,ProductCategory
 from .serializers import ProductSerializer,ProductCategorySerializer
 from core.permissions import IsMerchantUser
+from core.pagination import CustomPagination
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
@@ -12,6 +13,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     filterset_fields=['category','is_available']
     ordering_fields = ['created_at', 'price']  # 允許排序的欄位
     ordering = ['-created_at']  # 預設排序：新到舊
+    pagination_class = CustomPagination
 
     def get_permissions(self):
         if self.action in ['create', 'update', 'partial_update', 'destroy']:
