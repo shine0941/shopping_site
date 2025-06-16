@@ -9,6 +9,7 @@ export const useUserStore = defineStore('user', {
     token: '',
     refresh: '',
     username: '',
+    userid: '',
   }),
   actions: {
     init(need_login = false) {
@@ -16,6 +17,7 @@ export const useUserStore = defineStore('user', {
       const token = localStorage.getItem('token')
       const refresh = localStorage.getItem('refresh')
       const username = localStorage.getItem('username')
+      const userid = localStorage.getItem('userid')
       if (token) {
         if (this.isTokenExpired(token)) {
           console.log('token expired')
@@ -31,6 +33,7 @@ export const useUserStore = defineStore('user', {
           this.token = token
           this.refresh = refresh
           this.username = username || ''
+          this.userid = userid
         }
       } else {
         console.log('no token')
@@ -77,6 +80,8 @@ export const useUserStore = defineStore('user', {
         localStorage.setItem('refresh', this.refresh)
 
         // 取得用戶資訊
+        this.userid = res.data.user.cid
+        localStorage.setItem('userid', this.userid)
         this.username = res.data.user.full_name
         localStorage.setItem('username', this.username)
 
@@ -104,12 +109,15 @@ export const useUserStore = defineStore('user', {
       this.token = ''
       this.refresh = ''
       this.username = ''
+      this.userid = ''
       localStorage.removeItem('token')
       localStorage.removeItem('refresh')
       localStorage.removeItem('username')
+      localStorage.removeItem('userid')
       cartStore().clearCartStore()
       if (manual) {
         alert('logout successed')
+        router.push('/')
       }
     },
     isTokenExpired(token) {
@@ -121,6 +129,13 @@ export const useUserStore = defineStore('user', {
         console.log('isTokenExpired err', err)
         return true
       }
+    },
+    async updateUsername(username) {
+      const params = {}
+      params['full_name'] = username
+      const res = await api.updateUser(this.userid, params)
+      this.username = res.data.full_name
+      localStorage.setItem('username', this.username)
     },
   },
 })

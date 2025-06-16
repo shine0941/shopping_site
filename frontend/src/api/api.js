@@ -43,6 +43,10 @@ export default {
   register(params) {
     return apiClient.post(`/users/customer/register/`, params)
   },
+  updateUser(id, params) {
+    console.log('params', params)
+    return apiClient.patch(`/users/customers/${id}/`, params, { headers: authHeader() })
+  },
   refresh(params) {
     console.log('login', params)
     return apiClient.post(`/api/token/refresh/`, params)

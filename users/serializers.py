@@ -28,7 +28,7 @@ class CustomerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Customer
-        fields = ['id', 'user', 'total_spent', 'birthday', 'membership_level']
+        fields = ['id', 'user','full_name', 'total_spent', 'birthday', 'membership_level']
 
 class AdminUserSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
@@ -113,6 +113,7 @@ class CustomerTokenObtainPairSerializer(TokenObtainPairSerializer):
             data['user'] = {
                 'id': self.user.id,
                 'email': self.user.email,
+                'cid': customer_user.id,
                 'full_name': customer_user.full_name,
                 'birthday': customer_user.birthday,
                 'total_spent': customer_user.total_spent,

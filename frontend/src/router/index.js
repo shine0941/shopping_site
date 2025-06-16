@@ -7,6 +7,7 @@ import Login from '@/views/Login.vue'
 import Checkout from '@/views/Checkout.vue'
 import CheckoutResult from '@/views/CheckoutResult.vue'
 import OrderHistory from '@/views/OrderHistory.vue'
+import Profile from '@/views/Profile.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,6 +20,7 @@ const router = createRouter({
     { path: '/checkout', component: Checkout },
     { path: '/checkoutresult/:order', component: CheckoutResult },
     { path: '/orderhistory', component: OrderHistory },
+    { path: '/profile', component: Profile },
   ],
 })
 

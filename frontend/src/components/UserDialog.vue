@@ -22,5 +22,8 @@
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 const user = useUserStore()
-const items = ref([{ title: 'Order History', to: '/orderhistory/', icon: 'mdi-history' }])
+const items = ref([
+  { title: 'User Profile', to: '/profile/', icon: 'mdi-account' },
+  { title: 'Order History', to: '/orderhistory/', icon: 'mdi-history' },
+])
 </script>

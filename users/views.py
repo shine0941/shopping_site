@@ -88,4 +88,8 @@ class CustomerView(viewsets.ModelViewSet):
         user = self.request.user
         if user.is_superuser:
             return Customer.objects.all()
-        return Customer.objects.none()
+        return Customer.objects.filter(user=user)
+    
+    def perform_update(self, serializer):
+        # 防止惡意更新別人的資料
+        serializer.save(user=self.request.user)
