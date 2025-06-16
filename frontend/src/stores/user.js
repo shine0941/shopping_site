@@ -47,10 +47,26 @@ export const useUserStore = defineStore('user', {
         router.push('/login')
       }
     },
-    async login(username, password) {
+    async register(email, password) {
       try {
         const params = {
-          email: username,
+          email: email,
+          password: password,
+        }
+        const res = await api.register(params)
+        console.log('success', res.data)
+        if (res.status == 201) {
+          this.login(email, password)
+        }
+      } catch (err) {
+        console.log('error', err)
+        throw new Error('Register Failed')
+      }
+    },
+    async login(email, password) {
+      try {
+        const params = {
+          email: email,
           password: password,
         }
         const res = await api.login(params)
@@ -68,7 +84,7 @@ export const useUserStore = defineStore('user', {
         await cartStore().initCartStore()
       } catch (err) {
         console.log('error', err)
-        throw new Error('登入失敗')
+        throw new Error('Login Failed')
       }
     },
     async refreshAccess() {

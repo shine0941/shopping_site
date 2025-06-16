@@ -94,20 +94,20 @@ WSGI_APPLICATION = 'shopping_site.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'shopping_site',
-#         'USER': os.getenv('POSTGRES_USER'),
-#         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
-
 DATABASES = {
-    'default': dj_database_url.parse(urllib.parse.quote(os.getenv('DATABASE_URL'), ':/@'))
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'shopping_site',
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
 }
+
+# DATABASES = {
+#     'default': dj_database_url.parse(urllib.parse.quote(os.getenv('DATABASE_URL'), ':/@'))
+# }
 
 
 # Password validation

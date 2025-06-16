@@ -40,6 +40,9 @@ export default {
     console.log('login', params)
     return apiClient.post(`/users/customer/login/`, params)
   },
+  register(params) {
+    return apiClient.post(`/users/customer/register/`, params)
+  },
   refresh(params) {
     console.log('login', params)
     return apiClient.post(`/api/token/refresh/`, params)
