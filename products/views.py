@@ -1,15 +1,17 @@
 # views.py
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Product,ProductCategory
 from .serializers import ProductSerializer,ProductCategorySerializer
 from core.permissions import IsMerchantUser
 
 class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all().order_by('-created_at')
+    queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend,filters.OrderingFilter]
     filterset_fields=['category','is_available']
+    ordering_fields = ['created_at', 'price']  # 允許排序的欄位
+    ordering = ['-created_at']  # 預設排序：新到舊
 
     def get_permissions(self):
         if self.action in ['create', 'update', 'partial_update', 'destroy']:
@@ -21,14 +23,16 @@ class ProductViewSet(viewsets.ModelViewSet):
         serializer.save(merchant=merchant)
 
     def get_queryset(self):
-        queryset = Product.objects.all().order_by('-created_at')
+        queryset = Product.objects.all()
         category_id = self.request.query_params.get('category')
         if category_id:
             queryset = queryset.filter(category_id=category_id)
         # 商家只能看自己的商品；其他人可看全部
         if self.request.user.is_authenticated and hasattr(self.request.user, 'adminuser'):
-            return Product.objects.filter(merchant=self.request.user.adminuser).order_by('-created_at')
-        return Product.objects.filter(is_available=True).order_by('-created_at')
+            queryset =  queryset.filter(merchant=self.request.user.adminuser)
+        else:
+            queryset = queryset.filter(is_available=True)
+        return queryset
 
 class ProductCategoryViewSet(viewsets.ModelViewSet):
     queryset = ProductCategory.objects.all().order_by('order')

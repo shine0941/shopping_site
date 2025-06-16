@@ -28,10 +28,10 @@ apiClient.interceptors.response.use(
 )
 
 export default {
-  fetchProducts(page = 1, params = {}) {
+  fetchProducts(page = 1, params = {}, ordering = '-created_at') {
     console.log('getProducts params', params)
     // return apiClient.get(`products/?page=${page}`, { params: params })
-    return apiClient.get(`products/products/`, { params: params })
+    return apiClient.get(`products/products/?ordering=${ordering}`, { params: params })
   },
   fetchProduct(id) {
     return apiClient.get(`products/products/${id}/`)

@@ -8,7 +8,7 @@
   </div>
 </template>
 <script setup>
-import { mergeProps, onMounted, ref } from 'vue'
+import { mergeProps, onMounted, ref, watch } from 'vue'
 const props = defineProps({
   product_info: Object,
 })
@@ -17,6 +17,7 @@ const icon = ref('')
 const text = ref('')
 const bgcolor = ref('')
 const initLabel = () => {
+  console.log('initLabel')
   if (props.product_info.inventory <= 10) {
     display.value = true
     icon.value = 'mdi-alert-decagram'
@@ -32,7 +33,9 @@ const initLabel = () => {
     icon.value = 'mdi-sale'
     text.value = 'Special Price'
     bgcolor.value = 'orangered'
+  } else {
+    display.value = false
   }
 }
-onMounted(initLabel)
+watch(props, initLabel, { deep: true, immediate: true })
 </script>

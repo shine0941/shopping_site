@@ -1,7 +1,11 @@
 <template>
   <v-container style="max-width: 100vw">
     <!-- <v-row> filter </v-row> -->
-    <!-- <v-row>sort</v-row> -->
+    <v-row>
+      <v-col>
+        <SortMenu @changeOrdering="changeOrdering"></SortMenu>
+      </v-col>
+    </v-row>
     <v-row>
       <v-col v-for="(product, i) in product_list" :cols="3">
         <v-card color="primary" style="height: 56vh" variant="outlined" elevation="16" hover>
@@ -45,22 +49,28 @@ import api from '../api/api'
 import { cartStore } from '@/stores/cart'
 import ProductDetailDialog from '@/components/ProductDetailDialog.vue'
 import ProductLabel from '@/components/ProductLabel.vue'
+import SortMenu from '@/components/SortMenu.vue'
 const route = useRoute()
 const product_list = ref([])
 const cart = cartStore()
+const ordering = ref('-created_at')
 
 const fetchProducts = async () => {
   const params = {}
   if (route.params.category) {
     params['category'] = route.params.category
   }
-  const res = await api.fetchProducts(1, params)
+  const res = await api.fetchProducts(1, params, ordering.value)
   product_list.value = res.data
 }
 const addToCart = async (product) => {
   cart.appendCartItems(product.id)
 }
-
+const changeOrdering = (new_ordering) => {
+  ordering.value = new_ordering
+  console.log(ordering.value)
+}
 onMounted(fetchProducts)
 watch(route, fetchProducts, { immediate: true, deep: true })
+watch(ordering, fetchProducts, { immediate: true })
 </script>
