@@ -13,7 +13,13 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 from datetime import timedelta
+import urllib.parse
 from django.core.management.commands.runserver import Command as runserver
+import dj_database_url
+import urllib
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,8 +47,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'api_backend',
-    'api_frontend',
     'chat',
     'core',
     'orders',
@@ -90,15 +94,19 @@ WSGI_APPLICATION = 'shopping_site.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'shopping_site',
+#         'USER': os.getenv('POSTGRES_USER'),
+#         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'shopping_site',
-        'USER': 'admin',
-        'PASSWORD': '!QAZ2wsx#EDC',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.parse(urllib.parse.quote(os.getenv('DATABASE_URL'), ':/@'))
 }
 
 
@@ -249,3 +257,5 @@ runserver.default_port = '8001'        # <-- Your port
 runserver.default_addr = '0.0.0.0'   # <-- Your address
 
 # DJANGO_SETTINGS_MODULE=shopping_site.settings uvicorn shopping_site.asgi:application --host 0.0.0.0 --port 8001
+#
+# sudo docker compose up --build
