@@ -1,6 +1,7 @@
 <template>
   <v-navigation-drawer color="" v-model="props.drawer">
     <v-list nav>
+      <v-list-item title="All products" to="/" link elevation="0" hover></v-list-item>
       <v-list-item
         v-for="d in drawer_list"
         :title="d.name"
