@@ -130,12 +130,14 @@ export const useUserStore = defineStore('user', {
         return true
       }
     },
-    async updateUsername(username) {
-      const params = {}
-      params['full_name'] = username
+    async updateUsername(params) {
       const res = await api.updateUser(this.userid, params)
       this.username = res.data.full_name
       localStorage.setItem('username', this.username)
+    },
+    async fetchUserInfo() {
+      const res = await api.fetchUser(this.userid)
+      return res.data
     },
   },
 })

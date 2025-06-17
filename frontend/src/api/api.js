@@ -47,6 +47,9 @@ export default {
     console.log('params', params)
     return apiClient.patch(`/users/customers/${id}/`, params, { headers: authHeader() })
   },
+  fetchUser(id) {
+    return apiClient.get(`/users/customers/${id}/`, { headers: authHeader() })
+  },
   refresh(params) {
     console.log('login', params)
     return apiClient.post(`/api/token/refresh/`, params)
