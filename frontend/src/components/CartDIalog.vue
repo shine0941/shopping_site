@@ -1,5 +1,5 @@
 <template>
-  <v-dialog max-width="500">
+  <v-dialog width="40vw">
     <template v-slot:activator="{ props: activatorProps }">
       <v-tooltip text="Cart" location="bottom">
         <template v-slot:activator="{ props }">
@@ -29,9 +29,13 @@
                 <template v-slot:prepend>
                   <v-img :src="item.product.images[0].image" style="width: 50px"></v-img>
                 </template>
-                <v-card>{{ item.product.name }}</v-card>
-                <template v-slot:append>
-                  <div>
+                <v-row>
+                  <v-col :cols="8">
+                    <div style="align-content: center; margin-left: 10px">
+                      {{ item.product.name }}
+                    </div>
+                  </v-col>
+                  <v-col>
                     <v-number-input
                       v-model="item.quantity"
                       :reverse="false"
@@ -41,10 +45,13 @@
                       inset
                       variant="solo-filled"
                       @update:model-value="handleItemChange(item)"
+                      style="margin-right: 10px"
                     ></v-number-input>
-                  </div>
-                  <div>
-                    <v-icon>mdi-close</v-icon>
+                  </v-col>
+                </v-row>
+                <template v-slot:append>
+                  <div style="align-content: center">
+                    <v-icon @click="removeItem(item)">mdi-close</v-icon>
                   </div>
                 </template>
               </v-list-item>
@@ -76,5 +83,8 @@ import { cartStore } from '@/stores/cart'
 const cart = cartStore()
 const handleItemChange = async (item) => {
   await cart.updateCartItem(item)
+}
+const removeItem = async (item) => {
+  await cart.removeCartItem(item)
 }
 </script>
