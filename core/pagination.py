@@ -5,9 +5,12 @@ import math
 class CustomPagination(PageNumberPagination):
     page_size = 20  # 預設每頁項目數
     page_query_param = 'page'
+    page_size_query_param = 'page_size'  # ← 加這行讓前端可設定每頁筆數
+    max_page_size = 100  # 可選：限制最大每頁筆數，避免一次抓太多資料
 
     def get_paginated_response(self, data):
-        total_pages = math.ceil(self.page.paginator.count / self.page_size)
+        page_size = self.get_page_size(self.request)
+        total_pages = math.ceil(self.page.paginator.count / page_size) if page_size else 0
 
         return Response({
             'count': self.page.paginator.count,
