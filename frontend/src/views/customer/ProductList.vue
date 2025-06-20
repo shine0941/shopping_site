@@ -55,7 +55,7 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import api from '../api/api'
+import api from '../../api/api'
 import { cartStore } from '@/stores/cart'
 import ProductDetailDialog from '@/components/ProductDetailDialog.vue'
 import ProductLabel from '@/components/ProductLabel.vue'

@@ -1,27 +1,103 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import ChatTest from '@/views/ChatTest.vue'
-import ProductList from '@/views/ProductList.vue'
-import ProductDetail from '@/views/ProductDetail.vue'
-import Login from '@/views/Login.vue'
-import Checkout from '@/views/Checkout.vue'
-import CheckoutResult from '@/views/CheckoutResult.vue'
-import OrderHistory from '@/views/OrderHistory.vue'
-import Profile from '@/views/Profile.vue'
+import { useAuthStore } from '@/stores/auth' // pinia or other store
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    { path: '/', component: ProductList },
-    { path: '/:category', component: ProductList },
-    { path: '/chattest', component: ChatTest },
-    { path: '/products/:id', component: ProductDetail },
-    { path: '/login', component: Login },
-    { path: '/checkout', component: Checkout },
-    { path: '/checkoutresult/:order', component: CheckoutResult },
-    { path: '/orderhistory', component: OrderHistory },
-    { path: '/profile', component: Profile },
+    {
+      path: '/',
+      component: () => import('@/layouts/FrontLayout.vue'),
+      children: [
+        { path: '', component: () => import('@/views/customer/ProductList.vue') },
+        { path: ':category', component: () => import('@/views/customer/ProductList.vue') },
+        // { path: 'chattest', component: () => import('@/views/customer/ChatTest.vue') },
+        { path: 'products/:id', component: () => import('@/views/customer/ProductDetail.vue') },
+        {
+          path: 'login',
+          name: 'customer-login',
+          component: () => import('@/views/customer/Login.vue'),
+        },
+        {
+          path: 'checkout',
+          component: () => import('@/views/customer/Checkout.vue'),
+          meta: { requiresAuth: true, redirect: 'login' },
+        },
+        {
+          path: 'checkoutresult/:order',
+          component: () => import('@/views/customer/CheckoutResult.vue'),
+          meta: { requiresAuth: true, redirect: 'login' },
+        },
+        {
+          path: 'orderhistory',
+          component: () => import('@/views/customer/OrderHistory.vue'),
+          meta: { requiresAuth: true, redirect: 'login' },
+        },
+        {
+          path: 'profile',
+          component: () => import('@/views/customer/Profile.vue'),
+          meta: { requiresAuth: true, redirect: 'login' },
+        },
+      ],
+    },
+    {
+      path: '/admin',
+      component: () => import('@/layouts/AdminLayout.vue'),
+      // meta: { requiresAuth: true, requiresAdmin: true },
+      children: [
+        {
+          path: '',
+          name: 'AdminDashboard',
+          component: () => import('@/views/admin/Index.vue'),
+          // meta: { requiresAuth: true, requiresAdmin: true },
+        },
+        { path: 'login', name: 'admin-login', component: () => import('@/views/admin/Login.vue') },
+        {
+          path: 'products',
+          name: 'product-list',
+          component: () => import('@/views/admin/ProductList.vue'),
+          meta: { requiresAuth: true, requiresAdmin: true },
+        },
+        {
+          path: 'orders',
+          name: 'order-list',
+          component: () => import('@/views/admin/OrderList.vue'),
+          meta: { requiresAuth: true, requiresAdmin: true },
+        },
+        {
+          path: 'sales',
+          name: 'sales-report',
+          component: () => import('@/views/admin/SalesReport.vue'),
+          meta: { requiresAuth: true, requiresAdmin: true },
+        },
+      ],
+    },
   ],
+})
+
+router.beforeEach((to, from, next) => {
+  const auth = useAuthStore()
+
+  if (to.meta.requiresAuth && !auth.isAuthenticated) {
+    // 沒登入轉跳
+    console.log('111')
+    if (to.meta.requiresAdmin) {
+      console.log('222')
+      return next({ name: 'admin-login' })
+    }
+    console.log('333')
+    return next({ name: 'customer-login' })
+  }
+
+  // if (to.meta.requiresAdmin && !auth.isAdmin) {
+  //   // 不是 admin 轉跳首頁
+  //   return next({ name: 'Home' })
+  // }
+
+  if (to.meta.role && auth.user.role !== to.meta.role) {
+    return next({ name: 'Home' }) // 無權限，導回首頁
+  }
+
+  next()
 })
 
 export default router

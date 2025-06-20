@@ -21,17 +21,25 @@ apiClient.interceptors.response.use(
     const userStore = useUserStore()
     if (error.response && error.response.status === 401) {
       userStore.logout()
-      router.push('/login')
+      if (router.currentRoute.value.fullPath.includes('admin')) {
+        router.push('/admin/login')
+      } else {
+        router.push('/login')
+      }
     }
     return Promise.reject(error)
   },
 )
 
 export default {
-  fetchProducts(page = 1, params = {}, ordering = '-created_at') {
+  fetchProducts(page = 1, params = {}, ordering = '-created_at', page_size = 20) {
     console.log('getProducts params', params)
     // return apiClient.get(`products/?page=${page}`, { params: params })
-    return apiClient.get(`products/products/?page=${page}&ordering=${ordering}`, { params: params })
+
+    return apiClient.get(
+      `products/products/?page=${page}&ordering=${ordering}&page_size=${page_size}`,
+      { params: params },
+    )
   },
   fetchProduct(id) {
     return apiClient.get(`products/products/${id}/`)
@@ -39,6 +47,10 @@ export default {
   login(params) {
     console.log('login', params)
     return apiClient.post(`/users/customer/login/`, params)
+  },
+  admin_login(params) {
+    console.log('login', params)
+    return apiClient.post(`/users/admin/login/`, params)
   },
   register(params) {
     return apiClient.post(`/users/customer/register/`, params)
@@ -51,7 +63,7 @@ export default {
     return apiClient.get(`/users/customers/${id}/`, { headers: authHeader() })
   },
   refresh(params) {
-    console.log('login', params)
+    // console.log('login', params)
     return apiClient.post(`/api/token/refresh/`, params)
   },
   fetchCart() {
@@ -82,33 +94,21 @@ export default {
     console.log('api fetchOrder', id)
     return apiClient.get(`orders/orders/${id}/`, { headers: authHeader() })
   },
+  fetchBackendOrders(page = 1, params = {}, ordering = '-created_at', page_size = 20) {
+    console.log('api fetchBackendOrders')
+    return apiClient.get(
+      `orders/backend-list/?page=${page}&ordering=${ordering}&page_size=${page_size}`,
+      { headers: authHeader() },
+    )
+  },
+
   fetchProductCategories() {
     return apiClient.get(`products/categories/`)
   },
-  //   getCategorys() {
-  //     return apiClient.get(`categorys/`)
-  //   },
-  //   getTagCategorys() {
-  //     return apiClient.get(`tagcategorys/`)
-  //   },
-  //   getTags() {
-  //     return apiClient.get(`tags/`)
-  //   },
-  //   getActors() {
-  //     return apiClient.get(`actors/`)
-  //   },
-  //   createActor(data) {
-  //     console.log('createActor', data)
-  //     return apiClient.post(`actors/`, data)
-  //   },
-  //   updateVideo(id, data) {
-  //     // return apiClient.put(`videos/${id}/`, data)
-  //     return apiClient.patch(`videos/${id}/`, data)
-  //   },
-  //   createVideoClip(id, data) {
-  //     return apiClient.post(`videos/${id}/add_clip/`, data)
-  //   },
-  //   getRandomVideo(params) {
-  //     return apiClient.get(`videos/random/`, { params: params })
-  //   },
+  getMonthlySales() {
+    return apiClient.get(`orders/stats/monthly-sales/`, { headers: authHeader() })
+  },
+  getDailySales() {
+    return apiClient.get(`orders/stats/daily-sales/`, { headers: authHeader() })
+  },
 }

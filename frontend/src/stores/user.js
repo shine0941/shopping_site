@@ -3,6 +3,7 @@ import router from '@/router'
 import api from '@/api/api'
 import { cartStore } from './cart'
 import { jwtDecode } from 'jwt-decode'
+import { useAuthStore } from '@/stores/auth'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -10,6 +11,7 @@ export const useUserStore = defineStore('user', {
     refresh: '',
     username: '',
     userid: '',
+    is_staff: false,
   }),
   actions: {
     init(need_login = false) {
@@ -73,17 +75,11 @@ export const useUserStore = defineStore('user', {
           password: password,
         }
         const res = await api.login(params)
-        console.log('success', res.data)
-        this.token = res.data.access
-        localStorage.setItem('token', this.token)
-        this.refresh = res.data.refresh
-        localStorage.setItem('refresh', this.refresh)
 
-        // 取得用戶資訊
-        this.userid = res.data.user.cid
-        localStorage.setItem('userid', this.userid)
-        this.username = res.data.user.full_name
-        localStorage.setItem('username', this.username)
+        this.storeData(res.data)
+
+        const auth = useAuthStore()
+        auth.setUser(res.data)
 
         console.log('call cartStore init')
         await cartStore().initCartStore()
@@ -91,6 +87,45 @@ export const useUserStore = defineStore('user', {
         console.log('error', err)
         throw new Error('Login Failed')
       }
+    },
+    async admin_login(email, password) {
+      try {
+        const params = {
+          email: email,
+          password: password,
+        }
+        const res = await api.admin_login(params)
+
+        this.storeData(res.data)
+
+        const auth = useAuthStore()
+        auth.setUser(res.data)
+      } catch (err) {
+        console.log('error', err)
+        throw new Error('Login Failed')
+      }
+    },
+    storeData(data) {
+      this.token = data.access
+      localStorage.setItem('token', this.token)
+      this.refresh = data.refresh
+      localStorage.setItem('refresh', this.refresh)
+
+      // 取得用戶資訊
+      this.userid = data.user.id
+      localStorage.setItem('userid', this.userid)
+      this.username = data.user.email
+      localStorage.setItem('username', this.username)
+    },
+    clearData() {
+      this.token = ''
+      this.refresh = ''
+      this.username = ''
+      this.userid = ''
+      localStorage.removeItem('token')
+      localStorage.removeItem('refresh')
+      localStorage.removeItem('username')
+      localStorage.removeItem('userid')
     },
     async refreshAccess() {
       console.log('refreshAccess')
@@ -106,18 +141,22 @@ export const useUserStore = defineStore('user', {
       }
     },
     logout(manual = false) {
-      this.token = ''
-      this.refresh = ''
-      this.username = ''
-      this.userid = ''
-      localStorage.removeItem('token')
-      localStorage.removeItem('refresh')
-      localStorage.removeItem('username')
-      localStorage.removeItem('userid')
+      this.clearData()
       cartStore().clearCartStore()
+      const auth = useAuthStore()
+      auth.logout()
       if (manual) {
         alert('logout successed')
         router.push('/')
+      }
+    },
+    admin_logout(manual = false) {
+      this.clearData()
+      const auth = useAuthStore()
+      auth.logout()
+      if (manual) {
+        alert('logout successed')
+        router.push('/admin/login/')
       }
     },
     isTokenExpired(token) {
