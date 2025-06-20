@@ -11,7 +11,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend,filters.OrderingFilter]
     filterset_fields=['category','is_available']
-    ordering_fields = ['created_at', 'price']  # 允許排序的欄位
+    ordering_fields = ['id','created_at', 'price']  # 允許排序的欄位
     ordering = ['-created_at']  # 預設排序：新到舊
     pagination_class = CustomPagination
 
