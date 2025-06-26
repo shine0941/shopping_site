@@ -256,6 +256,16 @@ SIMPLE_JWT = {
 runserver.default_port = '8001'        # <-- Your port
 runserver.default_addr = '0.0.0.0'   # <-- Your address
 
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://redis:6379/1",  # redis: 是服務名稱
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
 # DJANGO_SETTINGS_MODULE=shopping_site.settings uvicorn shopping_site.asgi:application --host 0.0.0.0 --port 8001
 #
 # sudo docker compose up --build
