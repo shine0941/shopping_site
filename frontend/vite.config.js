@@ -12,7 +12,7 @@ export default defineConfig({
     vuetify({
       autoImport: true, // 這個打開才會自動註冊 <v-icon>、<v-btn> 等組件
     }),
-    vueDevTools(),
+    // vueDevTools(),
   ],
   resolve: {
     alias: {

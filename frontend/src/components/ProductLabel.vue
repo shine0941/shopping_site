@@ -3,6 +3,7 @@
     v-if="display"
     style="color: white; width: fit-content; padding: 5px"
     :style="{ 'background-color': bgcolor }"
+    :class="$deviceType == 'mobile' ? 'mobile-label0' : ''"
   >
     <v-icon>{{ icon }}</v-icon> {{ text }}
   </div>
@@ -39,3 +40,8 @@ const initLabel = () => {
 }
 watch(props, initLabel, { deep: true, immediate: true })
 </script>
+<style>
+.mobile-label {
+  font-size: 11px;
+}
+</style>

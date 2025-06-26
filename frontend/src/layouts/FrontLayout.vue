@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <div style="display: flex">
+      <!-- v-if="$deviceType == 'desktop'" -->
       <div>
         <div>
           <AppBar @switch-drawer="drawer = !drawer"></AppBar>
@@ -17,6 +18,11 @@
         </div>
       </div>
     </div>
+    <!-- <div v-else class="min-h-screen bg-gray-100 p-4">
+      <MobileAppBar></MobileAppBar>
+      <div style="margin-top: 64px"><RouterView /></div>
+      <MobileFooter></MobileFooter>
+    </div> -->
   </v-app>
 </template>
 <script setup>
@@ -25,6 +31,8 @@ import { RouterView } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import AppBar from '@/components/AppBar.vue'
 import AppDrawer from '@/components/AppDrawer.vue'
+import MobileAppBar from '@/components/MobileAppBar.vue'
+import MobileFooter from '@/components/MobileFooter.vue'
 
 const drawer = ref(true)
 const user = useUserStore()
