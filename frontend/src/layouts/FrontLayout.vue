@@ -38,7 +38,7 @@ const drawer = ref(true)
 const user = useUserStore()
 
 const mountedLog = () => {
-  console.log('mountedLog onMounted')
+  // console.log('mountedLog onMounted')
   user.init()
 }
 onMounted(mountedLog)

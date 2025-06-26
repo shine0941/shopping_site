@@ -8,10 +8,10 @@ export const cartStore = defineStore('cart', {
   }),
   actions: {
     init() {
-      console.log('cartStore init')
+      // console.log('cartStore init')
     },
     async initCartStore() {
-      console.log('cartStore init')
+      // console.log('cartStore init')
       const cartRes = await api.fetchCart()
       this.cart = cartRes.data[0].id
       localStorage.setItem('cart', this.cart)
@@ -48,14 +48,14 @@ export const cartStore = defineStore('cart', {
     async checkout() {
       const params = {}
       const res = await api.createOrder(params)
-      console.log('res', res)
+      // console.log('res', res)
       if (res.status == 201) {
         this.clearCartStore()
       }
       return res
     },
     clearCartStore() {
-      console.log('clearCartStore')
+      // console.log('clearCartStore')
       this.cart = ''
       this.cartItems = []
       localStorage.removeItem('cart')

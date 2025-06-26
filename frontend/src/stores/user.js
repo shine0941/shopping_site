@@ -15,34 +15,34 @@ export const useUserStore = defineStore('user', {
   }),
   actions: {
     init(need_login = false) {
-      console.log('useUserStore init')
+      // console.log('useUserStore init')
       const token = localStorage.getItem('token')
       const refresh = localStorage.getItem('refresh')
       const username = localStorage.getItem('username')
       const userid = localStorage.getItem('userid')
       if (token) {
         if (this.isTokenExpired(token)) {
-          console.log('token expired')
+          // console.log('token expired')
           if (refresh && !this.isTokenExpired(refresh)) {
-            console.log('call refreshAccess')
+            // console.log('call refreshAccess')
             this.refreshAccess()
           } else {
-            console.log('refresh expired')
+            // console.log('refresh expired')
             this.handleNoToken(need_login)
           }
         } else {
-          console.log('store token')
+          // console.log('store token')
           this.token = token
           this.refresh = refresh
           this.username = username || ''
           this.userid = userid
         }
       } else {
-        console.log('no token')
+        // console.log('no token')
         this.handleNoToken(need_login)
       }
       if (this.token) {
-        console.log('user init cart')
+        // console.log('user init cart')
         cartStore().initCartStore()
       }
     },
@@ -59,7 +59,7 @@ export const useUserStore = defineStore('user', {
           password: password,
         }
         const res = await api.register(params)
-        console.log('success', res.data)
+        // console.log('success', res.data)
         if (res.status == 201) {
           this.login(email, password)
         }
@@ -81,7 +81,7 @@ export const useUserStore = defineStore('user', {
         const auth = useAuthStore()
         auth.setUser(res.data)
 
-        console.log('call cartStore init')
+        // console.log('call cartStore init')
         await cartStore().initCartStore()
       } catch (err) {
         console.log('error', err)
@@ -128,14 +128,14 @@ export const useUserStore = defineStore('user', {
       localStorage.removeItem('userid')
     },
     async refreshAccess() {
-      console.log('refreshAccess')
+      // console.log('refreshAccess')
       const refresh = localStorage.getItem('refresh')
       if (refresh) {
         const params = {
           refresh: refresh,
         }
         const res = await api.refresh(params)
-        console.log('success', res.data)
+        // console.log('success', res.data)
         this.token = res.data.access
         localStorage.setItem('token', this.token)
       }

@@ -18,7 +18,7 @@ const icon = ref('')
 const text = ref('')
 const bgcolor = ref('')
 const initLabel = () => {
-  console.log('initLabel')
+  // console.log('initLabel')
   if (props.product_info.inventory <= 10) {
     display.value = true
     icon.value = 'mdi-alert-decagram'
