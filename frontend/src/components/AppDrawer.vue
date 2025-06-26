@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer color="" v-model="props.drawer">
+  <v-navigation-drawer color="" :model-value="drawer" @update:modelValue="emitDrawer">
     <v-list nav>
       <v-list-item title="All products" to="/" link elevation="0" hover></v-list-item>
       <v-list-item
@@ -19,6 +19,10 @@ import api from '@/api/api'
 const props = defineProps({
   drawer: Boolean,
 })
+const emit = defineEmits(['update:drawer'])
+const emitDrawer = (val) => {
+  emit('update:drawer', val)
+}
 const drawer_list = ref([])
 const initCategory = async () => {
   const res = await api.fetchProductCategories()
