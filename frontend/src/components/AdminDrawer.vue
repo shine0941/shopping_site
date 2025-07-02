@@ -22,5 +22,6 @@ const drawer_list = ref([
   { title: 'Product List', to: '/admin/products' },
   { title: 'Order List', to: '/admin/orders' },
   { title: 'Sales Report', to: '/admin/sales' },
+  { title: 'Customer Service', to: '/admin/chats' },
 ])
 </script>

@@ -11,8 +11,10 @@ export const useUserStore = defineStore('user', {
     refresh: '',
     username: '',
     userid: '',
-    is_staff: false,
   }),
+  getters: {
+    isLoggedin: (state) => !!state.token,
+  },
   actions: {
     init(need_login = false) {
       // console.log('useUserStore init')
@@ -31,7 +33,7 @@ export const useUserStore = defineStore('user', {
             this.handleNoToken(need_login)
           }
         } else {
-          // console.log('store token')
+          // console.log('got stored token')
           this.token = token
           this.refresh = refresh
           this.username = username || ''
@@ -41,8 +43,8 @@ export const useUserStore = defineStore('user', {
         // console.log('no token')
         this.handleNoToken(need_login)
       }
-      if (this.token) {
-        // console.log('user init cart')
+      const auth = useAuthStore()
+      if (this.token && !auth.isStaff) {
         cartStore().initCartStore()
       }
     },
@@ -79,7 +81,7 @@ export const useUserStore = defineStore('user', {
         this.storeData(res.data)
 
         const auth = useAuthStore()
-        auth.setUser(res.data)
+        auth.setUser(res.data.user)
 
         // console.log('call cartStore init')
         await cartStore().initCartStore()
@@ -99,7 +101,7 @@ export const useUserStore = defineStore('user', {
         this.storeData(res.data)
 
         const auth = useAuthStore()
-        auth.setUser(res.data)
+        auth.setUser(res.data.user)
       } catch (err) {
         console.log('error', err)
         throw new Error('Login Failed')
@@ -135,7 +137,7 @@ export const useUserStore = defineStore('user', {
           refresh: refresh,
         }
         const res = await api.refresh(params)
-        // console.log('success', res.data)
+        // console.log('refreshAccess res', res.data)
         this.token = res.data.access
         localStorage.setItem('token', this.token)
       }

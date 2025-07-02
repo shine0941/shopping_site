@@ -37,7 +37,8 @@ import { useUserStore } from '@/stores/user'
 const router = useRouter()
 const user = useUserStore()
 
-const email = ref('merchant@merchant.com')
+const email = ref('admin@example.com')
+// const email = ref('merchant@merchant.com')
 const password = ref('Passw0rd!')
 const show1 = ref(false)
 

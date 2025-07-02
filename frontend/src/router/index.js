@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth' // pinia or other store
+import { useUserStore } from '@/stores/user'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -69,22 +70,26 @@ const router = createRouter({
           component: () => import('@/views/admin/SalesReport.vue'),
           meta: { requiresAuth: true, requiresAdmin: true },
         },
+        {
+          path: 'chats',
+          name: 'customer-service',
+          component: () => import('@/views/admin/CustomerService.vue'),
+          meta: { requiresAuth: true, requiresAdmin: true },
+        },
       ],
     },
   ],
 })
 
 router.beforeEach((to, from, next) => {
+  const user = useUserStore()
   const auth = useAuthStore()
-
+  user.init()
   if (to.meta.requiresAuth && !auth.isAuthenticated) {
     // 沒登入轉跳
-    console.log('111')
     if (to.meta.requiresAdmin) {
-      console.log('222')
       return next({ name: 'admin-login' })
     }
-    console.log('333')
     return next({ name: 'customer-login' })
   }
 

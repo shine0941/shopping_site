@@ -44,11 +44,11 @@ export default {
     return apiClient.get(`products/products/${id}/`)
   },
   login(params) {
-    console.log('login', params)
+    // console.log('login', params)
     return apiClient.post(`/users/customer/login/`, params)
   },
   admin_login(params) {
-    console.log('login', params)
+    // console.log('login', params)
     return apiClient.post(`/users/admin/login/`, params)
   },
   register(params) {
@@ -109,5 +109,17 @@ export default {
   },
   getDailySales() {
     return apiClient.get(`orders/stats/daily-sales/`, { headers: authHeader() })
+  },
+  fetchChatRoom() {
+    return apiClient.get(`chat/chatrooms/`, { headers: authHeader() })
+  },
+  createChatRoom(params) {
+    return apiClient.post(`chat/chatrooms/`, (params = params), { headers: authHeader() })
+  },
+  fetchChatHistory(room_id) {
+    return apiClient.get(`chat/chatrooms/${room_id}/messages/`, { headers: authHeader() })
+  },
+  fetchStaffChatRoom() {
+    return apiClient.get(`chat/chatrooms/staff-chats/`, { headers: authHeader() })
   },
 }
