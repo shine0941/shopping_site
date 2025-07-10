@@ -19,7 +19,7 @@
       </div>
     </div>
     <div style="position: fixed; bottom: 3vh; right: 3vw">
-      <ChatDialog></ChatDialog>
+      <!-- <ChatDialog></ChatDialog> -->
     </div>
     <!-- <div v-else class="min-h-screen bg-gray-100 p-4">
       <MobileAppBar></MobileAppBar>
@@ -42,7 +42,7 @@ const drawer = ref(true)
 const user = useUserStore()
 
 const mountedLog = () => {
-  // console.log('mountedLog onMounted')
+  console.log('FrontLayout onMounted')
   user.init()
 }
 onMounted(mountedLog)
