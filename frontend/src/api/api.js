@@ -20,6 +20,9 @@ apiClient.interceptors.response.use(
   (error) => {
     console.log('apiClient error', error)
     const userStore = useUserStore()
+    if (error.response && error.response.status === 400) {
+      return Promise.resolve(error.response)
+    }
     if (error.response && error.response.status === 401) {
       userStore.logout()
       if (router.currentRoute.value.fullPath.includes('admin')) {
@@ -122,5 +125,19 @@ export default {
   },
   fetchStaffChatRoom() {
     return apiClient.get(`chat/chatrooms/staff-chats/`, { headers: authHeader() })
+  },
+  fetchCoupons(page = 1, params = {}, ordering = '-created_at', page_size = 20) {
+    // return apiClient.get(`coupons/coupons/`)
+    return apiClient.get(
+      `coupons/coupons/?page=${page}&ordering=${ordering}&page_size=${page_size}`,
+      { params: params },
+    )
+  },
+  createCoupon(params = {}) {
+    return apiClient.post(`coupons/coupons/`, params, { headers: authHeader() })
+  },
+  checkCoupon(params = {}) {
+    console.log(params)
+    return apiClient.post(`coupons/check/`, params, { headers: authHeader() })
   },
 }

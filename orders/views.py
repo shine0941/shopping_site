@@ -51,11 +51,12 @@ class CreateOrderView(APIView):
             if coupon_code:
                 try:
                     coupon = Coupon.objects.get(code=coupon_code, is_active=True)
+                    logger.info(coupon)
                     # check coupon valid
                     now = timezone.now()
                     if not (coupon.valid_from <= now <= coupon.valid_to):
                         return Response({"error": "優惠券已過期或尚未開始"}, status=status.HTTP_400_BAD_REQUEST)
-                    if coupon.used_count >= coupon.usage_limit:
+                    if coupon.usage_limit>0 and coupon.used_count >= coupon.usage_limit:
                         return Response({"error": "優惠券已達使用上限"}, status=status.HTTP_400_BAD_REQUEST)
                     
                     if coupon.discount_type=='percent':
@@ -63,7 +64,7 @@ class CreateOrderView(APIView):
                     elif coupon.discount_type=='fixed':
                         actual_price = actual_price - coupon.discount_value
                 except Coupon.DoesNotExist:
-                            return Response({"error": "無效的優惠券代碼"}, status=status.HTTP_400_BAD_REQUEST)
+                    return Response({"error": "無效的優惠券代碼"}, status=status.HTTP_400_BAD_REQUEST)
 
             try:
                 with transaction.atomic():

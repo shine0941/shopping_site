@@ -4,7 +4,7 @@
     <br />
     <v-row v-for="order in order_list">
       <v-col>
-        <v-card style="width: 50vw" variant="outlined" elevation="16" hover>
+        <v-card style="width: 70vw" variant="outlined" elevation="16" hover>
           <v-card-text>
             <v-table>
               <thead>
@@ -105,6 +105,12 @@
                       <td class="text-end">{{ parseInt(order.shipping_fee) }}</td>
                     </tr>
                     <!-- coupon -->
+                    <tr v-if="order.coupon">
+                      <td>Coupon</td>
+                      <td></td>
+                      <td></td>
+                      <td class="text-end">-{{ parseInt(order.coupon.discount_value) }}</td>
+                    </tr>
                     <!-- discount -->
                   </tbody>
                 </v-table>

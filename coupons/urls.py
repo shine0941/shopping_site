@@ -1,7 +1,7 @@
 # urls.py
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import CouponViewSet,AvailableCouponListView
+from .views import CouponViewSet,AvailableCouponListView,CheckCouponView
 
 router = DefaultRouter()
 router.register(r'coupons', CouponViewSet, basename='coupon')
@@ -9,4 +9,5 @@ router.register(r'coupons', CouponViewSet, basename='coupon')
 urlpatterns = [
     path('', include(router.urls)),
     path('available/', AvailableCouponListView.as_view(), name='available-coupons'),
+    path('check/', CheckCouponView.as_view()),
 ]
