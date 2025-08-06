@@ -1,5 +1,5 @@
 <template>
-  <v-dialog width="40vw">
+  <v-dialog width="40vw" min-height="30vh">
     <template v-slot:activator="{ props: activatorProps }">
       <v-tooltip text="Cart" location="bottom">
         <template v-slot:activator="{ props }">
@@ -25,36 +25,39 @@
         <v-card-text>
           <template v-if="cart.cartItems.length > 0">
             <v-list>
-              <v-list-item v-for="item in cart.cartItems" :key="item.id">
-                <template v-slot:prepend>
-                  <v-img :src="item.product.images[0].image" style="width: 50px"></v-img>
-                </template>
-                <v-row>
-                  <v-col :cols="8">
-                    <div style="align-content: center; margin-left: 10px">
-                      {{ item.product.name }}
+              <template v-for="(item, index) in cart.cartItems" :key="item.id">
+                <v-list-item>
+                  <template v-slot:prepend>
+                    <v-img :src="item.product.images[0].image" style="width: 50px"></v-img>
+                  </template>
+                  <v-row>
+                    <v-col :cols="8" style="align-content: center">
+                      <div style="align-content: center; margin-left: 10px">
+                        {{ item.product.name }}
+                      </div>
+                    </v-col>
+                    <v-col md="4" sm="4">
+                      <v-number-input
+                        v-model="item.quantity"
+                        :reverse="false"
+                        controlVariant="split"
+                        label=""
+                        :hideInput="false"
+                        inset
+                        variant="solo-filled"
+                        @update:model-value="handleItemChange(item)"
+                        style="margin-right: 10px"
+                      ></v-number-input>
+                    </v-col>
+                  </v-row>
+                  <template v-slot:append>
+                    <div style="align-content: center">
+                      <v-icon @click="removeItem(item)">mdi-trash-can</v-icon>
                     </div>
-                  </v-col>
-                  <v-col>
-                    <v-number-input
-                      v-model="item.quantity"
-                      :reverse="false"
-                      controlVariant="split"
-                      label=""
-                      :hideInput="false"
-                      inset
-                      variant="solo-filled"
-                      @update:model-value="handleItemChange(item)"
-                      style="margin-right: 10px"
-                    ></v-number-input>
-                  </v-col>
-                </v-row>
-                <template v-slot:append>
-                  <div style="align-content: center">
-                    <v-icon @click="removeItem(item)">mdi-close</v-icon>
-                  </div>
-                </template>
-              </v-list-item>
+                  </template>
+                </v-list-item>
+                <v-divider v-if="index + 1 < cart.cartItems.length"></v-divider>
+              </template>
             </v-list>
           </template>
           <template v-else>
@@ -63,9 +66,15 @@
         </v-card-text>
 
         <v-card-actions>
-          <v-btn text="Close Cart" @click="isActive.value = false" prepend-icon="mdi-close"></v-btn>
+          <v-btn
+            text="Close Cart"
+            @click="isActive.value = false"
+            prepend-icon="mdi-close"
+            color="primary"
+          ></v-btn>
           <v-spacer></v-spacer>
           <v-btn
+            color="primary"
             text="Checkout"
             prepend-icon="mdi-cart"
             to="/checkout/"
