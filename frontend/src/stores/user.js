@@ -4,6 +4,7 @@ import api from '@/api/api'
 import { cartStore } from './cart'
 import { jwtDecode } from 'jwt-decode'
 import { useAuthStore } from '@/stores/auth'
+import { useChatStore } from './chat'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -82,7 +83,8 @@ export const useUserStore = defineStore('user', {
 
         const auth = useAuthStore()
         auth.setUser(res.data.user)
-
+        const chat = useChatStore()
+        chat.initChatStore()
         // console.log('call cartStore init')
         await cartStore().initCartStore()
       } catch (err) {
@@ -147,6 +149,8 @@ export const useUserStore = defineStore('user', {
       cartStore().clearCartStore()
       const auth = useAuthStore()
       auth.logout()
+      const chat = useChatStore()
+      chat.logout()
       if (manual) {
         alert('logout successed')
         router.push('/')

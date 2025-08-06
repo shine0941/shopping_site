@@ -19,7 +19,15 @@ import dj_database_url
 import urllib
 from dotenv import load_dotenv
 
+env_file = os.getenv("ENV_FILE", ".env.local")  # 預設用 local
 load_dotenv()
+
+ENV = os.getenv("ENV")
+
+DEBUG = os.getenv("DEBUG") == "True"
+SECRET_KEY = os.getenv("SECRET_KEY", "fallback")
+
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1").split(",")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -34,7 +42,6 @@ SECRET_KEY = 'django-insecure-#sv#xj6*p++s*629+smr(!r65vtn1x+sguw8mbo-c69+9hrz$e
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -94,20 +101,26 @@ WSGI_APPLICATION = 'shopping_site.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'shopping_site',
-        'USER': os.getenv('POSTGRES_USER'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
-
+def is_docker():
+    try:
+        with open('/proc/1/cgroup', 'rt') as f:
+            return 'docker' in f.read()
+    except:
+        return False
 # DATABASES = {
-#     'default': dj_database_url.parse(urllib.parse.quote(os.getenv('DATABASE_URL'), ':/@'))
-# }
+#         'default': dj_database_url.parse(urllib.parse.quote(os.getenv('DATABASE_URL'), ':/@'))
+#     }
+
+DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'shopping_site',
+            'USER': os.getenv('POSTGRES_USER'),
+            'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+            'HOST': 'localhost',
+            'PORT': '5432',
+        }
+    }
 
 
 # Password validation
@@ -152,8 +165,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
-
-ALLOWED_HOSTS = ['192.168.1.100']
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
@@ -265,7 +276,3 @@ CACHES = {
         }
     }
 }
-
-# DJANGO_SETTINGS_MODULE=shopping_site.settings uvicorn shopping_site.asgi:application --host 0.0.0.0 --port 8001
-#
-# sudo docker compose up --build

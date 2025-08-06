@@ -59,9 +59,10 @@
   </v-dialog>
 </template>
 <script setup>
-import { mergeProps, onMounted, ref } from 'vue'
+import { mergeProps, onMounted, ref, watch } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { useChatStore } from '@/stores/chat'
+import { initSocket, sendMessage, closeSocket } from '@/plugins/socket'
 const user = useUserStore()
 const chat = useChatStore()
 
@@ -69,26 +70,26 @@ const message = ref('')
 const messages = ref([])
 let socket = null
 
-const initSocket = () => {
-  socket = new WebSocket(`ws://192.168.1.100:8001/ws/chat/${chat.room_id}/?token=${user.token}`)
-  //   socket = new WebSocket(`ws://192.168.1.100:8001/ws/chat/1/`)
-  socket.onmessage = (event) => {
-    // console.log('onmessage')
-    const data = JSON.parse(event.data)
-    messages.value.push(data)
-  }
+// const initSocket = () => {
+//   socket = new WebSocket(`ws://192.168.1.100:8001/ws/chat/${chat.room_id}/?token=${user.token}`)
+//   //   socket = new WebSocket(`ws://192.168.1.100:8001/ws/chat/1/`)
+//   socket.onmessage = (event) => {
+//     // console.log('onmessage')
+//     const data = JSON.parse(event.data)
+//     messages.value.push(data)
+//   }
 
-  socket.onclose = () => {
-    console.log('WebSocket closed')
-  }
-}
-const sendMessage = () => {
-  if (socket && message.value.trim() !== '') {
-    socket.send(JSON.stringify({ content: message.value }))
-    message.value = ''
-    scrollToBottom()
-  }
-}
+//   socket.onclose = () => {
+//     console.log('WebSocket closed')
+//   }
+// }
+// const sendMessage = () => {
+//   if (socket && message.value.trim() !== '') {
+//     socket.send(JSON.stringify({ content: message.value }))
+//     message.value = ''
+//     scrollToBottom()
+//   }
+// }
 const initChat = async () => {
   const _ = await chat.initChatStore()
   const history = await chat.fetchChatHistory()
@@ -104,9 +105,10 @@ const scrollToBottom = () => {
 }
 onMounted(() => {
   //   check room exist
-  initChat()
+  console.log('user.isLoggedin', user.isLoggedin)
   if (user.isLoggedin) {
-    initSocket()
+    // initChat()
+    // initSocket()
   }
 })
 </script>

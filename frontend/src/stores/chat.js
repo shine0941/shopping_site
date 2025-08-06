@@ -14,7 +14,7 @@ export const useChatStore = defineStore('chat', {
       if (res.data.length > 0) {
         this.room_id = res.data[0].id
         localStorage.setItem('room_id', this.room_id)
-        // this.fetchChatHistory()
+        this.fetchChatHistory()
       } else {
         console.log('no chat room')
         this.createChatRoom()
@@ -23,8 +23,8 @@ export const useChatStore = defineStore('chat', {
     async createChatRoom() {
       const userid = useUserStore().userid
       const params = {
-        customer: userid,
-        merchant: 1,
+        customer_id: userid,
+        merchant_id: 1,
       }
       const res = await api.createChatRoom(params)
       // console.log(res.data)
@@ -37,6 +37,11 @@ export const useChatStore = defineStore('chat', {
       this.history = res.data
       localStorage.setItem('chat_history', JSON.stringify(this.history))
       return this.history
+    },
+    logout() {
+      this.room_id = ''
+      this.history = []
+      localStorage.removeItem('room_id')
     },
   },
 })

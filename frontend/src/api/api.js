@@ -3,7 +3,8 @@ import router from '@/router'
 import { useUserStore } from '@/stores/user'
 
 const apiClient = axios.create({
-  baseURL: 'http://192.168.1.100:8001/',
+  // baseURL: 'http://192.168.1.100:8001/',
+  baseURL: 'http://0.0.0.0:8001/',
   headers: {
     'Content-Type': 'application/json',
   },
