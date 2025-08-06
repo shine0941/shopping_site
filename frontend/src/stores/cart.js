@@ -45,8 +45,7 @@ export const cartStore = defineStore('cart', {
       const res = await api.removeCartItem(item.id)
       this.fetchCartItems()
     },
-    async checkout() {
-      const params = {}
+    async checkout(params) {
       const res = await api.createOrder(params)
       // console.log('res', res)
       if (res.status == 201) {

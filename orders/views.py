@@ -27,6 +27,14 @@ class CreateOrderView(APIView):
     def post(self, request):
         user = request.user
         try:
+            logger.info(request.data)
+
+            shipping_fee = request.data.get("shipping_fee", 0)  # 先寫死，後續可調整
+            coupon_code = request.data.get("coupon_code", "")
+            recipient = request.data.get("recipient", "")
+            address = request.data.get("address", "")
+            phone = request.data.get("phone", "")
+
             cart = Cart.objects.get(customer=user)
             cart_items = CartItem.objects.filter(cart=cart)
             if not cart_items.exists():
@@ -34,11 +42,11 @@ class CreateOrderView(APIView):
 
             # 原始總價
             total_price = sum(int(item.product.price * Decimal(item.product.discount_percent / 100)) * item.quantity for item in cart_items)
-            shipping_fee = 60  # 先寫死，後續可調整
+            
             actual_price = total_price + shipping_fee
 
             # 優惠券處理（可選）
-            coupon_code = request.data.get("coupon_code")
+            
             coupon = None
             if coupon_code:
                 try:
@@ -67,7 +75,10 @@ class CreateOrderView(APIView):
                         shipping_fee=shipping_fee,
                         coupon=coupon,
                         merchant_summary={},  # 先留空，或根據商家分類進一步處理
-                        order_status=OrderStatus.UNPAID
+                        order_status=OrderStatus.UNPAID,
+                        recipient=recipient,
+                        address=address,
+                        phone=phone
                     )
                     
                     if coupon:
