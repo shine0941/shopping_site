@@ -1,5 +1,6 @@
 <template>
   <v-container style="max-width: 100vw">
+    <RedirectDialog v-model:is-active="dialogVisible"></RedirectDialog>
     <!-- v-if="$deviceType == 'desktop'" -->
     <!-- <v-row> filter </v-row> -->
     <v-row>
@@ -95,15 +96,19 @@ import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import api from '../../api/api'
 import { cartStore } from '@/stores/cart'
+import { useUserStore } from '@/stores/user'
 import ProductDetailDialog from '@/components/ProductDetailDialog.vue'
 import ProductLabel from '@/components/ProductLabel.vue'
 import SortMenu from '@/components/SortMenu.vue'
+import RedirectDialog from '@/components/RedirectDialog.vue'
 const route = useRoute()
 const product_list = ref([])
 const cart = cartStore()
+const user = useUserStore()
 const ordering = ref('-created_at')
 const page_amount = ref(0)
 const page = ref(1)
+const dialogVisible = ref(false)
 
 const fetchProducts = async () => {
   const params = {}
@@ -115,7 +120,13 @@ const fetchProducts = async () => {
   page_amount.value = res.data.total_pages
 }
 const addToCart = async (product) => {
-  cart.appendCartItems(product.id)
+  // check login
+  if (user.isLoggedin) {
+    cart.appendCartItems(product.id)
+  } else {
+    console.log('show redirect login')
+    dialogVisible.value = true
+  }
 }
 const changeOrdering = (new_ordering) => {
   ordering.value = new_ordering
