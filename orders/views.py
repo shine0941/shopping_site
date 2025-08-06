@@ -143,12 +143,13 @@ class BackendOrderListView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user.adminuser
         queryset = Order.objects.all()
+        logger.info(user.role)
         if user.role=='merchant':
             # 找出商家的商品 ID
             merchant_products = Product.objects.filter(merchant=user).values_list('id', flat=True)
             # 找出有包含商家商品的訂單
             queryset = queryset.filter(items__product__in=merchant_products).distinct()
-        elif user.role=='admin':
+        elif user.role=='manager':
             pass
         else:
             queryset = queryset.none()

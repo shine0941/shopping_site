@@ -10,6 +10,8 @@
     <v-data-table-server
       :items="coupon_list"
       :headers="headers"
+      :items-length="total"
+      v-model:items-per-page="itemsPerPage"
       @update:options="loadItems"
     ></v-data-table-server>
   </v-container>
@@ -28,12 +30,12 @@ const ordering = ref('-created_at')
 const headers = ref([
   { title: 'ID', key: 'id', align: 'end', sortable: true },
   { title: 'code', key: 'code', align: 'end', sortable: true },
-  { title: 'discount_type', key: 'discount_type', align: 'end', sortable: true },
-  { title: 'discount_value', key: 'discount_value', align: 'end', sortable: true },
-  { title: 'valid_from', key: 'valid_from', align: 'end', sortable: true },
-  { title: 'valid_to', key: 'valid_to', align: 'end', sortable: true },
-  { title: 'minimum_order_amount', key: 'minimum_order_amount', align: 'end', sortable: true },
-  { title: 'usage_limit', key: 'usage_limit', align: 'end', sortable: true },
+  { title: 'discount type', key: 'discount_type', align: 'end', sortable: true },
+  { title: 'discount value', key: 'discount_value', align: 'end', sortable: true },
+  { title: 'valid from', key: 'valid_from', align: 'end', sortable: true },
+  { title: 'valid to', key: 'valid_to', align: 'end', sortable: true },
+  { title: 'minimum order amount', key: 'minimum_order_amount', align: 'end', sortable: true },
+  { title: 'usage limit', key: 'usage_limit', align: 'end', sortable: true },
 ])
 
 const loadItems = async ({ page, itemsPerPage, sortBy }) => {

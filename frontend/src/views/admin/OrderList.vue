@@ -23,7 +23,7 @@ const ordering = ref('-created_at')
 
 const headers = ref([
   { title: 'ID', key: 'id', align: 'end', sortable: true },
-  { title: 'customer', key: 'customer', align: 'end', sortable: true },
+  { title: 'customer', key: 'customer.email', align: 'end', sortable: true },
   { title: 'created_at', key: 'created_at', align: 'end', sortable: true },
   { title: 'total_price', key: 'total_price', align: 'end', sortable: true },
   { title: 'shipping_fee', key: 'shipping_fee', align: 'end', sortable: true },
