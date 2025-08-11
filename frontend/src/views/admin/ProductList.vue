@@ -8,6 +8,15 @@
       v-model:items-per-page="itemsPerPage"
       @update:options="loadItems"
     >
+      <template v-slot:item.is_available="{ item }">
+        <div class="d-flex ga-2 justify-end">
+          <v-switch
+            v-model="item.is_available"
+            color="primary"
+            @click="patchProdict(item)"
+          ></v-switch>
+        </div>
+      </template>
       <template v-slot:item.actions="{ item }">
         <div class="d-flex ga-2 justify-end">
           <v-icon
@@ -49,6 +58,7 @@ const headers = ref([
   { title: 'Discount Percent(%)', key: 'discount_percent', align: 'end', sortable: false },
   { title: 'Price', key: 'price', align: 'end', sortable: true },
   { title: 'Create At', key: 'created_at', align: 'end', sortable: true },
+  { title: 'Available', key: 'is_available', align: 'end', sortable: false },
   { title: 'Actions', key: 'actions', align: 'end', sortable: false },
 ])
 const loadItems = async ({ page, itemsPerPage, sortBy }) => {
@@ -64,5 +74,12 @@ const loadItems = async ({ page, itemsPerPage, sortBy }) => {
   product_list.value = res.data.results
   page_amount.value = res.data.total_pages
   total.value = res.data.count
+}
+const patchProdict = async (product) => {
+  console.log(product)
+  const res = await api.patchProduct(product.id, {
+    is_available: !product.is_available,
+  })
+  emit('fetch-list-event')
 }
 </script>

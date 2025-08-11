@@ -1,10 +1,13 @@
 # views.py
+import logging
 from rest_framework import viewsets, permissions, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Product,ProductCategory
 from .serializers import ProductSerializer,ProductCategorySerializer
 from core.permissions import IsMerchantUser
 from core.pagination import CustomPagination
+
+logger = logging.getLogger(__name__)
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
@@ -31,7 +34,9 @@ class ProductViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(category_id=category_id)
         # 商家只能看自己的商品；其他人可看全部
         if self.request.user.is_authenticated and hasattr(self.request.user, 'adminuser'):
-            queryset =  queryset.filter(merchant=self.request.user.adminuser)
+            adminuser = getattr(self.request.user, 'adminuser')
+            if adminuser.role == 'merchant':
+                queryset =  queryset.filter(merchant=self.request.user.adminuser)
         else:
             queryset = queryset.filter(is_available=True)
         return queryset

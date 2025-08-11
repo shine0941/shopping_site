@@ -47,6 +47,9 @@ export default {
   fetchProduct(id) {
     return apiClient.get(`products/products/${id}/`)
   },
+  patchProduct(id, params = {}) {
+    return apiClient.patch(`products/products/${id}/`, params, { headers: authHeader() })
+  },
   login(params) {
     // console.log('login', params)
     return apiClient.post(`/users/customer/login/`, params)
