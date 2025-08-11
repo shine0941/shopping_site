@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Product, ProductCategory, ProductImage
-
+from users.models import AdminUser
+from users.serializers import AdminUserSerializer
 class ProductImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductImage
@@ -12,19 +13,27 @@ class ProductCategorySerializer(serializers.ModelSerializer):
         fields = ['id', 'name','description','order']
 
 class ProductSerializer(serializers.ModelSerializer):
-    category = serializers.PrimaryKeyRelatedField(queryset=ProductCategory.objects.all())
+    category = ProductCategorySerializer(read_only=True)
+    # category = serializers.PrimaryKeyRelatedField(queryset=ProductCategory.objects.all())
     images = ProductImageSerializer(many=True, read_only=True)
     uploaded_images = serializers.ListField(
         child=serializers.ImageField(), write_only=True, required=False,
         help_text="使用 form-data 上傳圖片，欄位名稱為 uploaded_images"
     )
     category_name = serializers.CharField(source='category.name', read_only=True)
+    merchant = AdminUserSerializer(read_only=True)
+    merchant_id = serializers.PrimaryKeyRelatedField(
+        many=False, queryset=AdminUser.objects.all(), write_only=True, source='merchant'
+    )
+    category_id = serializers.PrimaryKeyRelatedField(
+        many=False, queryset=ProductCategory.objects.all(), write_only=True, source='category'
+    )
 
     class Meta:
         model = Product
         fields = [
-            'id','merchant', 'name', 'description', 'price', 'discount_percent',
-            'category','category_name','inventory', 'is_available','sold_count','images', 
+            'id','merchant','merchant_id', 'name', 'description', 'price', 'discount_percent',
+            'category','category_id','category_name','inventory', 'is_available','sold_count','images', 
             'uploaded_images', 'created_at','updated_at'
         ]
         read_only_fields = ['id', 'created_at', 'updated_at','images']

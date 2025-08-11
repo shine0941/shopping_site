@@ -6,35 +6,39 @@ from pathlib import Path
 from django.core.files import File
 from django.db import transaction
 
-# 類別與名稱模板對應
-category_names = {
-    1: "相機",
-    2: "電腦",
-    3: "手機",
-    4: "平板",
-    5: "藍芽耳機",
-    6: "滑鼠",
-    7: "鍵盤",
-    8: "SSD",
-    9: "螢幕",
-    10: "智慧手錶",
-}
 
-category_images = {
-    1: 'camera_lens_set.png',   # 相機
-    2: 'computer_laptop.png',  # 電腦
-    3: 'smartphone.png',   # 手機
-    4: 'computer_tablet.png',   # 平板
-    5: 'music_earphone_true_wireless_case.png',    # 藍芽耳機
-    6: 'game_gaming_mouse.png',     # 滑鼠
-    7: 'computer_keyboard_black.png',     # 鍵盤
-    8: 'computer_ssd.png',    # SSD
-    9: 'tv_screen_black.png',   # 螢幕
-    10: 'sports_katsudouryoukei.png',  # 智慧手錶
-}
+
+
 
 class Command(BaseCommand):
     help = 'Generate fake products data'
+
+    # 類別與名稱模板對應
+    category_names = {
+        1: "相機",
+        2: "電腦",
+        3: "手機",
+        4: "平板",
+        5: "藍芽耳機",
+        6: "滑鼠",
+        7: "鍵盤",
+        8: "SSD",
+        9: "螢幕",
+        10: "智慧手錶",
+    }
+
+    category_images = {
+        1: 'camera_lens_set.png',   # 相機
+        2: 'computer_laptop.png',  # 電腦
+        3: 'smartphone.png',   # 手機
+        4: 'computer_tablet.png',   # 平板
+        5: 'music_earphone_true_wireless_case.png',    # 藍芽耳機
+        6: 'game_gaming_mouse.png',     # 滑鼠
+        7: 'computer_keyboard_black.png',     # 鍵盤
+        8: 'computer_ssd.png',    # SSD
+        9: 'tv_screen_black.png',   # 螢幕
+        10: 'sports_katsudouryoukei.png',  # 智慧手錶
+    }
 
     # def add_arguments(self, parser):
     #     parser.add_argument('--file', type=str, help='File to scan')
@@ -57,7 +61,7 @@ class Command(BaseCommand):
                         )
 
                         # 隨機選一張圖當作產品圖片
-                        image_path = Path.joinpath(image_dir,category_images[category])
+                        image_path = Path.joinpath(image_dir,self.category_images[category])
                         with open(image_path, 'rb') as f:
                             ProductImage.objects.create(
                                 product=product,
@@ -73,7 +77,7 @@ class Command(BaseCommand):
     def generate_product_name(self,category):
         prefix = random.choice(["Zeta", "Neo", "Omni", "Astro", "Vertex", "Lumo", "Hyper", "Cyra", "Nova", "Orbi"])
         model = f"{random.choice(['X', 'S', 'T', 'M'])}{random.randint(100,999)}"
-        return f"{prefix} {category_names[category]} {model}"
+        return f"{prefix} {self.category_names[category]} {model}"
 
     # 隨機生成說明文字
     def generate_description(self,category):
@@ -86,7 +90,7 @@ class Command(BaseCommand):
             "內建最新作業系統，提供流暢操作",
             "強化連接能力與多樣擴充性",
         ]
-        return f"{category_names[category]}裝置，{random.choice(phrases)}。"
+        return f"{self.category_names[category]}裝置，{random.choice(phrases)}。"
 
     # 隨機價格產生器（根據類別調整範圍）
     def generate_price(self,category):
