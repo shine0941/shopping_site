@@ -6,17 +6,22 @@ from coupons.models import Coupon  # 後面會建立
 
 class OrderStatus(models.IntegerChoices):
     INIT = 0, "Init"
-
+    # 金流
     UNPAID = 10, "Unpaid"
     PAID = 11, "Paid"
-
+    # 物流
     PROCESSING = 20,"Processing"
     READYFORPICKUP = 21, "Ready for pickup"
     OUTOFDELIVERY = 22, "Out of delivery"
     DELIVERED = 23, "Delivered"
-
+    # 失敗
     FAILED = 90, "Failed"
     FAILEDPAYMENT = 91, "Payment failed"
+    # 退換貨
+    RETURNED = 95, "Returned"
+    EXCHANGED = 96, "Exchanged"
+    # 取消
+    CANCELLED = 99, "Cancelled"
 
 class Order(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE)
