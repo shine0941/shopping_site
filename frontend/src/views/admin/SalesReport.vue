@@ -5,6 +5,8 @@
     <v-card>
       <Bar :data="barData" :options="options" />
     </v-card>
+    <!-- todo sales ranking -->
+    <!-- todo sales ratio -->
   </v-container>
 </template>
 <script setup>

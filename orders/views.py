@@ -24,7 +24,6 @@ logger = logging.getLogger(__name__)
 class CreateOrderView(APIView):
     permission_classes = [permissions.IsAuthenticated, IsCustomerUser]
 
-    # @transaction.atomic
     def post(self, request):
         user = request.user
         shipping_fee = request.data.get("shipping_fee", 0)
@@ -39,7 +38,6 @@ class CreateOrderView(APIView):
 class CancelOrderView(APIView):
     permission_classes = [permissions.IsAuthenticated, IsCustomerUser]
 
-    # @transaction.atomic
     def post(self, request):
         user = request.user
         order_id = request.data.get("order_id")
