@@ -10,24 +10,24 @@ from .models import Order, OrderItem, OrderStatus
 from cart.models import Cart, CartItem
 from coupons.models import Coupon
 from .serializers import OrderSerializer
-from core.permissions import IsMerchantUser
+from core.permissions import IsMerchantUser, IsAdminUser, IsCustomerUser
 from products.models import Product
 import logging
 from core.pagination import CustomPagination
 from datetime import datetime
 from django.db.models import Sum
 from calendar import monthrange
-from .services import checkout
+from .services import checkout,cancel
 
 logger = logging.getLogger(__name__)
 
 class CreateOrderView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsCustomerUser]
 
-    @transaction.atomic
+    # @transaction.atomic
     def post(self, request):
         user = request.user
-        shipping_fee = request.data.get("shipping_fee", 0)  # 先寫死，後續可調整
+        shipping_fee = request.data.get("shipping_fee", 0)
         return checkout(
             user,shipping_fee,
             coupon_code=request.data.get("coupon_code", ""),
@@ -35,6 +35,15 @@ class CreateOrderView(APIView):
             address=request.data.get("address", ""),
             phone=request.data.get("phone", ""),
         )
+
+class CancelOrderView(APIView):
+    permission_classes = [permissions.IsAuthenticated, IsCustomerUser]
+
+    # @transaction.atomic
+    def post(self, request):
+        user = request.user
+        order_id = request.data.get("order_id")
+        return cancel(user, order_id)
 
 class CustomerOrderListView(generics.ListAPIView):
     serializer_class = OrderSerializer

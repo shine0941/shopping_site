@@ -13,5 +13,9 @@ export const orderStore = defineStore('order', {
       const res = await api.fetchOrder(id)
       return res.data
     },
+    async cancelOrder(params) {
+      const res = await api.cancelOrder(params)
+      return res.data
+    },
   },
 })

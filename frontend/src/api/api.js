@@ -100,6 +100,9 @@ export default {
     console.log('api fetchOrder', id)
     return apiClient.get(`orders/orders/${id}/`, { headers: authHeader() })
   },
+  cancelOrder(params) {
+    return apiClient.post(`orders/cancel/`, params, { headers: authHeader() })
+  },
   fetchBackendOrders(page = 1, params = {}, ordering = '-created_at', page_size = 20) {
     console.log('api fetchBackendOrders')
     return apiClient.get(

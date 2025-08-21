@@ -13,6 +13,7 @@
                   <th>total</th>
                   <th>date</th>
                   <th></th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -23,58 +24,76 @@
                   <td>
                     <v-btn @click="order.show = !order.show">Order detail</v-btn>
                   </td>
+                  <td>
+                    <v-btn @click="cancelOrder(order.id)" :disabled="order.order_status >= 90"
+                      >Order Cancel</v-btn
+                    >
+                  </td>
                 </tr>
               </tbody>
             </v-table>
             <v-divider></v-divider>
             <v-stepper v-model="order.order_status_display">
-              <v-stepper-header>
-                <v-stepper-item
-                  :complete="order.order_status_display >= 0"
-                  :color="order.order_status_display >= 0 ? 'green' : ''"
-                  title="Init"
-                  :value="0"
-                  icon="mdi-playlist-check"
-                ></v-stepper-item>
+              <template v-if="order.order_status_display < 90">
+                <v-stepper-header>
+                  <v-stepper-item
+                    :complete="order.order_status_display >= 0"
+                    :color="order.order_status_display >= 0 ? 'green' : ''"
+                    title="Init"
+                    :value="0"
+                    icon="mdi-playlist-check"
+                  ></v-stepper-item>
 
-                <v-divider></v-divider>
-                <v-stepper-item
-                  :complete="order.order_status_display >= 20"
-                  :color="order.order_status_display >= 20 ? 'green' : ''"
-                  title="Processing"
-                  :value="20"
-                  icon="mdi-playlist-check"
-                ></v-stepper-item>
+                  <v-divider></v-divider>
+                  <v-stepper-item
+                    :complete="order.order_status_display >= 20"
+                    :color="order.order_status_display >= 20 ? 'green' : ''"
+                    title="Processing"
+                    :value="20"
+                    icon="mdi-playlist-check"
+                  ></v-stepper-item>
 
-                <v-divider></v-divider>
+                  <v-divider></v-divider>
 
-                <v-stepper-item
-                  :complete="order.order_status_display >= 21"
-                  :color="order.order_status_display >= 21 ? 'green' : ''"
-                  title="Ready for Pickup"
-                  :value="21"
-                  icon="mdi-package-variant-closed"
-                ></v-stepper-item>
+                  <v-stepper-item
+                    :complete="order.order_status_display >= 21"
+                    :color="order.order_status_display >= 21 ? 'green' : ''"
+                    title="Ready for Pickup"
+                    :value="21"
+                    icon="mdi-package-variant-closed"
+                  ></v-stepper-item>
 
-                <v-divider></v-divider>
+                  <v-divider></v-divider>
 
-                <v-stepper-item
-                  :complete="order.order_status_display >= 22"
-                  :color="order.order_status_display >= 22 ? 'green' : ''"
-                  title="Out For Delivery"
-                  :value="22"
-                  icon="mdi-truck-delivery"
-                ></v-stepper-item>
-                <v-divider></v-divider>
+                  <v-stepper-item
+                    :complete="order.order_status_display >= 22"
+                    :color="order.order_status_display >= 22 ? 'green' : ''"
+                    title="Out For Delivery"
+                    :value="22"
+                    icon="mdi-truck-delivery"
+                  ></v-stepper-item>
+                  <v-divider></v-divider>
 
-                <v-stepper-item
-                  :complete="order.order_status_display >= 23"
-                  :color="order.order_status_display >= 23 ? 'green' : ''"
-                  title="Delivered"
-                  :value="23"
-                  icon="mdi-package-variant-closed-check"
-                ></v-stepper-item>
-              </v-stepper-header>
+                  <v-stepper-item
+                    :complete="order.order_status_display >= 23"
+                    :color="order.order_status_display >= 23 ? 'green' : ''"
+                    title="Delivered"
+                    :value="23"
+                    icon="mdi-package-variant-closed-check"
+                  ></v-stepper-item>
+                </v-stepper-header>
+              </template>
+              <template v-else>
+                <v-stepper-header>
+                  <v-stepper-item
+                    :error="order.order_status_display >= 90"
+                    :color="order.order_status_display >= 90 ? 'red' : ''"
+                    title="Canceled"
+                    :value="90"
+                    icon="mdi-package-variant-closed-check"
+                  ></v-stepper-item>
+                </v-stepper-header>
+              </template>
             </v-stepper>
           </v-card-text>
           <v-expand-transition>
@@ -140,6 +159,13 @@ const fetchOrders = async () => {
     }
   })
   console.log(order_list.value[0])
+}
+const cancelOrder = async (id) => {
+  const params = { order_id: id }
+  const res = await order.cancelOrder(params)
+  if (res.status_code == 200) {
+    fetchOrders()
+  }
 }
 const caculateCartItemSubtotal = (item) => {
   return parseInt(item.quantity * Number(item.unit_price))
