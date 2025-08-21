@@ -1,6 +1,7 @@
 <template>
   <v-container style="max-width: 100vw">
-    <RedirectDialog v-model:is-active="dialogVisible"></RedirectDialog>
+    <RedirectDialog v-model:is-active="showLoginDialog"></RedirectDialog>
+    <MessageDialog v-model:is-active="showMsgDialog" v-model:message="cartMsg"></MessageDialog>
     <!-- v-if="$deviceType == 'desktop'" -->
     <!-- <v-row> filter </v-row> -->
     <v-row>
@@ -101,6 +102,7 @@ import ProductDetailDialog from '@/components/ProductDetailDialog.vue'
 import ProductLabel from '@/components/ProductLabel.vue'
 import SortMenu from '@/components/SortMenu.vue'
 import RedirectDialog from '@/components/RedirectDialog.vue'
+import MessageDialog from '@/components/MessageDialog.vue'
 const route = useRoute()
 const product_list = ref([])
 const cart = cartStore()
@@ -108,7 +110,9 @@ const user = useUserStore()
 const ordering = ref('-created_at')
 const page_amount = ref(0)
 const page = ref(1)
-const dialogVisible = ref(false)
+const showLoginDialog = ref(false)
+const showMsgDialog = ref(false)
+const cartMsg = ref('Add to cart successed.')
 
 const fetchProducts = async () => {
   const params = {}
@@ -123,9 +127,10 @@ const addToCart = async (product) => {
   // check login
   if (user.isLoggedin) {
     cart.appendCartItems(product.id)
+    showMsgDialog.value = true
   } else {
     console.log('show redirect login')
-    dialogVisible.value = true
+    showLoginDialog.value = true
   }
 }
 const changeOrdering = (new_ordering) => {
