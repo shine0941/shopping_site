@@ -104,31 +104,39 @@
                 <v-table>
                   <thead>
                     <tr>
-                      <th>product name</th>
-                      <th>quantity</th>
-                      <th>price</th>
-                      <th>subtotal</th>
+                      <th style="width: 40%">product name</th>
+                      <th style="width: 20%" class="text-center">quantity</th>
+                      <th style="width: 20%" class="text-center">price</th>
+                      <th style="width: 20%" class="text-center">subtotal</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="item in order.items">
-                      <td>{{ item.product.name }}</td>
-                      <td>{{ item.quantity }}</td>
-                      <td class="text-end">{{ parseInt(item.unit_price) }}</td>
-                      <td class="text-end">{{ caculateCartItemSubtotal(item) }}</td>
+                      <td style="width: 40%">{{ item.product.name }}</td>
+                      <td style="width: 20%" class="text-center">{{ item.quantity }}</td>
+                      <td style="width: 20%" class="text-center">
+                        {{ parseInt(item.unit_price) }}
+                      </td>
+                      <td style="width: 20%" class="text-center">
+                        {{ caculateCartItemSubtotal(item) }}
+                      </td>
                     </tr>
                     <tr>
-                      <td>Shipping Fee</td>
-                      <td></td>
-                      <td></td>
-                      <td class="text-end">{{ parseInt(order.shipping_fee) }}</td>
+                      <td style="width: 40%">Shipping Fee</td>
+                      <td style="width: 20%"></td>
+                      <td style="width: 20%"></td>
+                      <td style="width: 20%" class="text-center">
+                        {{ parseInt(order.shipping_fee) }}
+                      </td>
                     </tr>
                     <!-- coupon -->
                     <tr v-if="order.coupon">
-                      <td>Coupon</td>
-                      <td></td>
-                      <td></td>
-                      <td class="text-end">-{{ parseInt(order.coupon.discount_value) }}</td>
+                      <td style="width: 40%">Coupon</td>
+                      <td style="width: 20%"></td>
+                      <td style="width: 20%"></td>
+                      <td style="width: 20%" class="text-center">
+                        -{{ parseInt(order.coupon.discount_value) }}
+                      </td>
                     </tr>
                     <!-- discount -->
                   </tbody>
