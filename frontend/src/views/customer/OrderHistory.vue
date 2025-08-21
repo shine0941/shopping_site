@@ -148,6 +148,7 @@ const order = orderStore()
 const order_list = ref([])
 const fetchOrders = async () => {
   console.log('fetchOrders')
+  order_list.value = []
   const res = await order.getOrderList()
   console.log(res[0])
   order_list.value = res.map((order) => {
@@ -163,9 +164,7 @@ const fetchOrders = async () => {
 const cancelOrder = async (id) => {
   const params = { order_id: id }
   const res = await order.cancelOrder(params)
-  if (res.status_code == 200) {
-    fetchOrders()
-  }
+  fetchOrders()
 }
 const caculateCartItemSubtotal = (item) => {
   return parseInt(item.quantity * Number(item.unit_price))
