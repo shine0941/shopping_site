@@ -13,9 +13,10 @@ jobs:
       postgres:
         image: postgres:14
         env:
-          POSTGRES_USER: admin
-          POSTGRES_PASSWORD: '!QAZ2wsx#EDC'
-          POSTGRES_DB: shopping_site
+          DB_HOST: postgres
+          DB_USER: admin
+          DB_PASSWORD: '!QAZ2wsx#EDC'
+          DB_NAME: shopping_site
         ports: []
         options: >-
           --health-cmd="pg_isready -U admin"
