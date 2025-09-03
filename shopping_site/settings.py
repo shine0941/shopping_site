@@ -115,7 +115,7 @@ def is_docker():
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME', 'shopping_site'),
+        'NAME': os.getenv('POSTGRES_DB', 'shopping_site'),
         'USER': os.getenv('POSTGRES_USER'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
         'HOST': os.getenv('DB_HOST', 'postgres'),
@@ -126,24 +126,6 @@ DATABASES = {
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
 }
-
-# DATABASES = {
-#     'default': dj_database_url.config(
-#         default=f"postgres://admin:password@localhost:5432/shopping_site"
-#     )
-# }
-
-# DB_HOST = os.getenv('DB_HOST', 'localhost')
-# DB_NAME = os.getenv('DB_NAME', 'shopping_site')
-# DB_USER = os.getenv('POSTGRES_USER', '')
-# DB_PWD = quote(os.getenv('POSTGRES_PASSWORD', ''))
-# DB_PORT = os.getenv('DB_PORT', '5432')
-# DATABASES = {
-#     'default': dj_database_url.config(
-#         default=f"postgres://{DB_USER}:{DB_PWD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-#     )
-# }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
