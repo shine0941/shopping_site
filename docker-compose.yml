@@ -1,16 +1,4 @@
 services:
-  backend:
-    build: .
-    command: python manage.py runserver 0.0.0.0:8001
-    volumes:
-      - .:/app
-    ports:
-      - '8001:8001'
-    depends_on:
-      - db
-    env_file:
-      - .env
-
   db:
     image: postgres:15
     volumes:
@@ -20,6 +8,19 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 
+  backend:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8001
+    volumes:
+      - .:/app
+      - /app/env_shopping
+    ports:
+      - '8001:8001'
+    depends_on:
+      - db
+    env_file:
+      - .env.docker
+
   frontend:
     build:
       context: ./frontend
@@ -27,6 +28,7 @@ services:
       - '5174:5174'
     volumes:
       - ./frontend:/app
+      - /app/node_modules
     command: npm run dev -- --host
 
 volumes:
