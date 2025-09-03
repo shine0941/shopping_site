@@ -112,36 +112,37 @@ def is_docker():
 #         'default': dj_database_url.parse(urllib.parse.quote(os.getenv('DATABASE_URL'), ':/@'))
 #     }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'shopping_site',
-#         'USER': os.getenv('POSTGRES_USER'),
-#         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-#     # 'default': {
-#     #     'ENGINE': 'django.db.backends.sqlite3',
-#     #     'NAME': BASE_DIR / 'db.sqlite3',
-#     # }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME', 'shopping_site'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': os.getenv('DB_HOST', 'localhost'),
+        'PORT': os.getenv('DB_PORT', '5432'),
+    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
+}
 
 # DATABASES = {
 #     'default': dj_database_url.config(
 #         default=f"postgres://admin:password@localhost:5432/shopping_site"
 #     )
 # }
-DB_HOST = os.getenv('DB_HOST', 'localhost')
-DB_NAME = os.getenv('DB_NAME', 'shopping_site')
-DB_USER = os.getenv('POSTGRES_USER', '')
-DB_PWD = quote(os.getenv('POSTGRES_PASSWORD', ''))
-DB_PORT = os.getenv('DB_PORT', '5432')
-DATABASES = {
-    'default': dj_database_url.config(
-        default=f"postgres://{DB_USER}:{DB_PWD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-    )
-}
+
+# DB_HOST = os.getenv('DB_HOST', 'localhost')
+# DB_NAME = os.getenv('DB_NAME', 'shopping_site')
+# DB_USER = os.getenv('POSTGRES_USER', '')
+# DB_PWD = quote(os.getenv('POSTGRES_PASSWORD', ''))
+# DB_PORT = os.getenv('DB_PORT', '5432')
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default=f"postgres://{DB_USER}:{DB_PWD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+#     )
+# }
 
 
 # Password validation

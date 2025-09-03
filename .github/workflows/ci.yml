@@ -45,11 +45,19 @@ jobs:
 
       - name: Run migrations
         env:
+          # DB_HOST: postgres
+          # POSTGRES_USER: tesddbusr
+          # POSTGRES_PASSWORD: tesddbpwd
+          # DB_NAME: shopping_site
           DATABASE_URL: postgres://tesddbusr:tesddbpwd@postgres:5432/shopping_site
         run: python manage.py migrate
 
       - name: Run tests
         env:
+          # DB_HOST: postgres
+          # POSTGRES_USER: tesddbusr
+          # POSTGRES_PASSWORD: tesddbpwd
+          # DB_NAME: shopping_site
           DATABASE_URL: postgres://tesddbusr:tesddbpwd@postgres:5432/shopping_site
         run: pytest
 
