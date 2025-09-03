@@ -1,4 +1,4 @@
-name: Local Docker CI/CD
+name: Docker Compose CI
 
 on:
   push:
@@ -9,42 +9,34 @@ on:
 jobs:
   backend-tests:
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:14
-        env:
-          DB_HOST: postgres
-          POSTGRES_USER: tesddbusr
-          POSTGRES_PASSWORD: tesddbpwd
-          POSTGRES_DB: shopping_site
-        ports: []
-        options: >-
-          --health-cmd="pg_isready -U tesddbusr"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
+
+    # services:
+    #   postgres:
+    #     image: postgres:14
+    #     env:
+    #       DB_HOST: postgres
+    #       POSTGRES_USER: tesddbusr
+    #       POSTGRES_PASSWORD: tesddbpwd
+    #       POSTGRES_DB: shopping_site
+    #     ports: []
+    #     options: >-
+    #       --health-cmd="pg_isready -U tesddbusr"
+    #       --health-interval=10s
+    #       --health-timeout=5s
+    #       --health-retries=5
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
+      - name: Set up Docker Compose
+        run: docker compose version
 
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
+      - name: Build and run tests
+        run: docker compose -f docker-compose.test.yml up --build --abort-on-container-exit
 
-      - name: Run migrations
-        env:
-          DATABASE_URL: postgres://tesddbusr:tesddbpwd@postgres:5432/shopping_site
-        run: python manage.py migrate
-
-      - name: Run tests
-        env:
-          DATABASE_URL: postgres://tesddbusr:tesddbpwd@postgres:5432/shopping_site
-        run: pytest
+      - name: Cleanup
+        if: always()
+        run: docker compose -f docker-compose.test.yml down -v
 
   # docker-build:
   #   runs-on: ubuntu-latest
