@@ -14,12 +14,12 @@ jobs:
         image: postgres:14
         env:
           DB_HOST: postgres
-          POSTGRES_USER: admin
-          POSTGRES_PASSWORD: '!QAZ2wsx#EDC'
+          POSTGRES_USER: tesddbusr
+          POSTGRES_PASSWORD: tesddbpwd
           DB_NAME: shopping_site
         ports: []
         options: >-
-          --health-cmd="pg_isready -U admin"
+          --health-cmd="pg_isready -U tesddbusr"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
@@ -38,19 +38,19 @@ jobs:
 
       # - name: Wait for Postgres
       #   run: |
-      #     until pg_isready -h postgres -U admin; do
+      #     until pg_isready -h postgres -U tesddbusr; do
       #       echo "Waiting for postgres..."
       #       sleep 2
       #     done
 
       - name: Run migrations
         env:
-          DATABASE_URL: 'postgres://admin:!QAZ2wsx#EDC@postgres:5432/shopping_site'
+          DATABASE_URL: postgres://tesddbusr:tesddbpwd@postgres:5432/shopping_site
         run: python manage.py migrate
 
       - name: Run tests
         env:
-          DATABASE_URL: 'postgres://admin:!QAZ2wsx#EDC@postgres:5432/shopping_site'
+          DATABASE_URL: postgres://tesddbusr:tesddbpwd@postgres:5432/shopping_site
         run: pytest
 
   # docker-build:
