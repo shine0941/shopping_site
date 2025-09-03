@@ -35,21 +35,21 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: Wait for Postgres
-        run: |
-          until pg_isready -h postgres -U admin; do
-            echo "Waiting for postgres..."
-            sleep 2
-          done
+      # - name: Wait for Postgres
+      #   run: |
+      #     until pg_isready -h postgres -U admin; do
+      #       echo "Waiting for postgres..."
+      #       sleep 2
+      #     done
 
       - name: Run migrations
         env:
-          DATABASE_URL: postgres://admin:!QAZ2wsx%23EDC@postgres:5432/shopping_site
+          DATABASE_URL: 'postgres://admin:!QAZ2wsx#EDC@postgres:5432/shopping_site'
         run: python manage.py migrate
 
       - name: Run tests
         env:
-          DATABASE_URL: postgres://admin:!QAZ2wsx%23EDC@postgres:5432/shopping_site
+          DATABASE_URL: 'postgres://admin:!QAZ2wsx#EDC@postgres:5432/shopping_site'
         run: pytest
 
   # docker-build:
