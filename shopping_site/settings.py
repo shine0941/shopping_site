@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 from datetime import timedelta
-import urllib.parse
+from urllib.parse import quote
 from django.core.management.commands.runserver import Command as runserver
 import dj_database_url
 import urllib
@@ -135,7 +135,7 @@ def is_docker():
 DB_HOST = os.getenv('DB_HOST', 'localhost')
 DB_NAME = os.getenv('DB_NAME', 'shopping_site')
 DB_USER = os.getenv('POSTGRES_USER')
-DB_PWD = os.getenv('POSTGRES_PASSWORD')
+DB_PWD = quote(os.getenv('POSTGRES_PASSWORD'))
 DB_PORT = os.getenv('DB_PORT', '5432')
 DATABASES = {
     'default': dj_database_url.config(
