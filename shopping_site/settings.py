@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'channels',
     'corsheaders',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -285,3 +286,5 @@ runserver.default_addr = '0.0.0.0'   # <-- Your address
 #         }
 #     }
 # }
+
+SWAGGER_USE_COMPAT_RENDERERS = False
