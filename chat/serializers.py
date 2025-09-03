@@ -15,7 +15,7 @@ class ChatRoomSerializer(serializers.ModelSerializer):
         many=False, queryset=AdminUser.objects.all(), write_only=True, source='merchant')
     class Meta:
         model = ChatRoom
-        fields = ['id', 'customer', 'merchant', 'created_at']
+        fields = ['id', 'customer','customer_id', 'merchant','merchant_id', 'created_at']
 
 class MessageSerializer(serializers.ModelSerializer):
     sender_email = serializers.SerializerMethodField()
