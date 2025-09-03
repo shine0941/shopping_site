@@ -62,7 +62,7 @@ const headers = ref([
   { title: 'Actions', key: 'actions', align: 'end', sortable: false },
 ])
 const loadItems = async ({ page, itemsPerPage, sortBy }) => {
-  console.log(page, itemsPerPage, sortBy)
+  // console.log(page, itemsPerPage, sortBy)
   const params = {}
   if (sortBy.length) {
     const sortKey = sortBy[0].key
