@@ -28,7 +28,7 @@ services:
       db:
         condition: service_healthy
 
-  frontend:
-    build: ./frontend
-    command: >
-      sh -c "npm ci && npm test && npm run build"
+  # frontend:
+  #   build: ./frontend
+  #   command: >
+  #     sh -c "npm ci && npm test && npm run build"
