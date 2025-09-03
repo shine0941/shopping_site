@@ -134,8 +134,8 @@ def is_docker():
 # }
 DB_HOST = os.getenv('DB_HOST', 'localhost')
 DB_NAME = os.getenv('DB_NAME', 'shopping_site')
-DB_USER = os.getenv('DB_USER')
-DB_PWD = os.getenv('DB_PASSWORD')
+DB_USER = os.getenv('POSTGRES_USER')
+DB_PWD = os.getenv('POSTGRES_PASSWORD')
 DB_PORT = os.getenv('DB_PORT', '5432')
 DATABASES = {
     'default': dj_database_url.config(

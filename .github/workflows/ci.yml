@@ -14,8 +14,8 @@ jobs:
         image: postgres:14
         env:
           DB_HOST: postgres
-          DB_USER: admin
-          DB_PASSWORD: '!QAZ2wsx#EDC'
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: '!QAZ2wsx#EDC'
           DB_NAME: shopping_site
         ports: []
         options: >-
